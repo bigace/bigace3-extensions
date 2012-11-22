@@ -1,0 +1,57 @@
+ul.socials {margin:0px;padding:0px;}
+ul.socials li {
+	display:inline-block;
+	float:left;
+	list-style-type:none;
+	margin:0 2px 0 0;
+	height:29px;
+	width:50px;
+	cursor:pointer;
+}
+ul.socials a {
+	display:block;
+	width:50px;
+	height:29px;
+	font-size:0;
+	text-indent:-9999px;
+	color:transparent;
+	
+}
+div.socialclear{clear:left;height:1px;}
+.furl, .furl:hover, .digg, .digg:hover, .reddit, .reddit:hover, .stumbleupon, .stumbleupon:hover, 
+.delicious, .delicious:hover, .yahoo, .yahoo:hover, .blinklist, .blinklist:hover, 
+.technorati, .technorati:hover, .facebook, .facebook:hover, .flickr, .flickr:hover, 
+.myspace, .myspace:hover, .mixx, .mixx:hover, .script-style, .script-style:hover, 
+.designfloat, .designfloat:hover, .rss, .rss:hover  {
+	background:url('sprite-trans.png') no-repeat;
+}
+.furl {background-position:-300px top;}
+.furl:hover {background-position:-300px bottom;}
+.digg {background-position:-500px top;}
+.digg:hover {background-position:-500px bottom;}
+.reddit {background-position:-100px top; }
+.reddit:hover {background-position:-100px bottom;}
+.stumbleupon {background-position:-50px top; }
+.stumbleupon:hover {background-position:-50px bottom;}
+.delicious {background-position:left top; }
+.delicious:hover {background-position:left bottom;}
+.yahoo {background-position:-650px top; }
+.yahoo:hover {background-position:-650px bottom;}
+.blinklist {background-position:-600px top; }
+.blinklist:hover {background-position:-600px bottom;}
+.technorati {background-position:-700px top; }
+.technorati:hover {background-position:-700px bottom;}
+.myspace {background-position:-200px top; }
+.myspace:hover {background-position:-200px bottom;}
+.flickr {background-position:-350px top;}
+.flickr:hover {background-position:-350px bottom;}
+.facebook {background-position:-450px top;}
+.facebook:hover {background-position:-450px bottom;}
+.mixx {background-position:-250px top;}
+.mixx:hover {background-position:-250px bottom;}
+.rss {background-position:-150px top;}
+.rss:hover {background-position:-150px bottom;}
+.script-style {background-position:-400px top;}
+.script-style:hover {background-position:-400px bottom;}
+.designfloat {background-position:-550px top;}
+.designfloat:hover {background-position:-550px bottom;}

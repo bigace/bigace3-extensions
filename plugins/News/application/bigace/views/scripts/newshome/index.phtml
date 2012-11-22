@@ -1,0 +1,76 @@
+<?php
+/*  @license http://opensource.org/licenses/gpl-license.php GNU Public License
+    @author Kevin Papst
+    @copyright Copyright (C) Kevin Papst
+    @version $Id: index.phtml 140 2011-03-17 19:18:33Z kevin $ */
+
+$this->t()->load('news');
+$this->headLink()->appendStylesheet($this->directory().'news/styles.css');
+
+?>
+<div id="newsListing">
+<?php
+
+// if we display only archive items, display a short title
+if (isset($this->ARCHIVE_TS))
+{
+    echo '<h2>' . $this->t('news_archive_title') . ' ' .
+         $this->date($this->ARCHIVE_TS)->withFormat($this->t('news_archive')) . '</h2>';
+}
+
+$commentsOn = $this->comments()->isActivated();
+
+foreach ($this->NEWS as $newsEntry)
+{
+    $newsPage  = $newsEntry['item'];
+    $newsUrl   = $this->link($newsPage);
+    $newsImage = $newsEntry['image'];
+    ?>
+    <div class="newsEntry">
+        <h2><a href="<?php echo $newsUrl; ?>" title="<?php echo $newsPage->getTitle(); ?>"><?php echo $newsPage->getTitle(); ?></a></h2>
+        <p class="newsMeta">
+            <?php echo $this->date($newsPage->getDate()); ?> |
+            <?php echo $this->userProfileLink($newsPage->getCreateByID(), null, true); ?>
+            <?php if ($commentsOn) {?>
+            | <a href="<?php echo $newsUrl; ?>#comments"><?php echo $this->commentCounter($newsPage); ?> <?php echo $this->t('news_comments'); ?></a>
+            <?php } ?>
+            <?php /* FIXME {news_category item=$newsPage suffix="," last=" | "} */ ?>
+        </p>
+        <p>
+            <?php if(!is_null($newsImage)) { ?>
+            <a href="<?php echo $newsUrl; ?>" title="<?php echo $newsImage->getName(); ?>">
+                <img src="<?php echo $this->thumbnail($newsImage, array('width' => '100')); ?>" class="newsImage" alt="<?php echo $newsImage->getName(); ?>" align="left">
+            </a>
+            <?php } ?>
+            <?php echo $newsPage->getTeaser(); ?>
+        </p>
+        <p>
+            <?php echo $this->t('news_read_more'); ?> <a href="<?php echo $newsUrl; ?>"><?php echo $newsPage->getTitle(); ?></a>
+        </p>
+    </div>
+    <?php
+}
+
+if ($this->showArchives)
+{
+    ?>
+    <div class="newsEntry newsArchives">
+        <h2><?php echo $this->t('news_archives_list'); ?></h2>
+        <ul>
+            <?php
+            $format = $this->t('news_archive');
+            foreach ($this->ARCHIVES as $archive) {
+                echo '<li><a href="'.$this->link($archive->getUrl()).'">' .
+                     $this->date($archive->getTimestamp())->withFormat($format) .
+                     '<span>('.$archive->getAmount().')</span>' .
+                     '</a></li>';
+            }
+            ?>
+        </ul>
+        <div class="newClearer">&nbsp;</div>
+    </div>
+    <?php
+}
+
+?>
+</div>

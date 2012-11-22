@@ -1,0 +1,33 @@
+<?php 
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst 
+	@copyright Copyright (C) Kevin Papst 
+	@version $Id: edit.phtml 4 2010-07-17 14:20:17Z kevin $ */
+
+echo $this->backlink($this->BACK_URL); 
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR); 
+
+?>
+
+<form action="<?php echo $this->SAVE_URL; ?>" method="post">
+<input type="hidden" name="commentID" value="<?php echo $this->COMMENT['id']; ?>">
+
+<h2><?php echo $this->t("edit"); ?></h2>
+
+<label><?php echo $this->t("name"); ?></label>
+<?php echo $this->formText('name', $this->COMMENT['name']); ?>
+
+<label><?php echo $this->t("email"); ?></label>
+<?php echo $this->formText('email', $this->COMMENT['email']); ?>
+
+<label><?php echo $this->t("comment_homepage"); ?></label>
+<?php echo $this->formText('homepage', $this->COMMENT['homepage']); ?>
+
+<label><?php echo $this->t("comment_text"); ?></label>
+<?php echo $this->formTextarea('comment', $this->COMMENT['comment']); ?>
+
+<?php echo $this->saveButton('saveComment'); ?>
+
+</form>

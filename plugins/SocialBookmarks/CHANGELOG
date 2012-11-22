@@ -1,0 +1,47 @@
+######################################################################
+# INSTALLATION
+######################################################################
+
+1. Install this extension
+2. Activate the "Social Bookmarks" plugin
+3. Add [socialbookmarks/] to your layout or to any page content
+4. Save and reload a page, the social bookmarks menu should appear
+
+All currently possible social-bookmark services:
+digg,reddit,stumbleupon,delicious,technorati,furl,facebook,myspace,yahoo,script-style,blinklist,mixx,designfloat
+
+Configuration:
+==============
+If you want to use only some services, customize your code to use [socialbookmarks]list-of-services[/socialbookmarks] instead.
+"list-of-services" is a comma separated list of the services to use, e.g.: [socialbookmarks]facebook,digg,technorati,delicious[/socialbookmarks]
+
+
+######################################################################
+# CHANGELOG
+######################################################################
+
+Version 1.0
+- compatibility with Bigace 3
+- configurable sites
+- no need for template customization, except of the [socialbookmarks/] code
+
+Version 0.5
+- css: added margin/padding 0 for ul.socials
+
+Version 0.4
+- Support {metatags} and content filter, no need for other template hooks
+
+Version 0.3
+- Fixed path for additional IE7 javascript
+
+Version 0.2
+- Added element to clear left floating
+
+######################################################################
+# TODO
+######################################################################
+
+- make the global configuration editable through administration
+- translate service titles
+- make it extendable by using an icon pack instead of a sprite?
+- add more services

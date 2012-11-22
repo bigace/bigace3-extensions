@@ -1,0 +1,50 @@
+Open todos
+------------
+- Trackback support
+- Comments RSS Feed
+
+#############################################################
+Version 2.1:
+------------
+- configurable amount of items on News-Home
+- using proper sanitizing methods
+
+Version 2.0:
+------------
+- merged Comments and News extension for Bigace 3.0
+
+Comments Version 1.6.1:
+-----------------------
+- fixed comments rss smarty TAG {link_comments_rss}
+- translation fixes for 2.7
+
+Comments Version 1.6:
+-----------------------
+Please <b>update all links to your RSS feed</b> to /plugins/comments/rss.php or use Smarty TAG {link_comments_rss}.
+Reactivate the comments plugin (location changed).
+
+- added trackback support
+- check for and do not allow duplicate comments
+- moved Comments Admin Plugin
+- moved RSS feed to /plugins/comments/rss.php
+- using admin styles
+
+News Version 1.4:
+-----------------------
+- translation improvements for 2.7
+- improved admin interface
+- fixed rss link and homepage url
+- abbility to delete assigned news image 
+
+News Version 1.3:
+-----------------------
+Please <b>update all links to your RSS feed</b> by using Smarty TAG {link_news_rss} 
+and then <b>delete /addon/rss/news.php</b>.
+
+- moved News Admin Plugin
+- moved RSS feed to /plugins/news/rss.php
+- moved jscalendar to /plugins/news/jscalendar/
+- auto-include comments include if comment plugin is loaded
+- show comment counter only if comment plugin is loaded
+- using new admin styles
+- display RSS feed automatically using the metatags_more action

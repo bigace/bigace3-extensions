@@ -1,0 +1,53 @@
+<?php
+/*  @license http://opensource.org/licenses/gpl-license.php GNU Public License
+    @author Kevin Papst
+    @copyright Copyright (C) Kevin Papst
+    @version $Id: index.phtml 131 2011-03-16 18:42:48Z kevin $ */
+
+$this->t()->load('news');
+$this->headLink()->appendStylesheet($this->directory().'news/styles.css');
+
+$news = $this->MENU;
+$date = $this->MENU->getCreateDate();
+
+if (isset($this->NEWS)) {
+    $news = $this->NEWS;
+    $date = $news->getDate();
+}
+
+$newsContent = '';
+if (isset($this->NEWS_CONTENT)) {
+    $newsContent = $this->NEWS_CONTENT;
+} else {
+    $newsContent = $this->content();
+}
+
+$commentsOn = $this->comments()->isActivated();
+$newsUrl    = $this->link($news);
+
+?>
+<div class="newsEntry">
+    <h2><?php echo $news->getTitle(); ?></h2>
+    <p class="newsMeta">
+        <?php echo $this->date($date); ?> |
+        <?php echo $this->userProfileLink($news->getCreateByID(), null, true); ?>
+        <?php if ($commentsOn) {?>
+        | <a href="<?php echo $newsUrl; ?>#comments"><?php echo $this->commentCounter($news); ?> <?php echo $this->t('news_comments'); ?></a>
+        <?php } ?>
+        <?php /* FIXME {news_category item=$newsPage suffix="," last=" | "} */ ?>
+    </p>
+    <?php
+    if(isset($this->IMAGE) && $this->IMAGE !== null) {
+        ?>
+        <a href="<?php echo $this->link($this->IMAGE); ?>" title="<?php echo $this->IMAGE->getName(); ?>">
+            <img class="left" src="<?php echo $this->thumbnail($this->IMAGE, array('width' => '200')); ?>" class="newsImage" alt="<?php echo $this->IMAGE->getName(); ?>">
+        </a>
+        <?php
+    }
+
+    echo Bigace_Hooks::apply_filters('news_content', $newsContent, $news);
+
+    echo $this->action('index', 'comment', 'news', array('item' => $news));
+
+    ?>
+</div>

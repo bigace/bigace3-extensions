@@ -1,0 +1,77 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: form.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+echo $this->backlink($this->BACK_URL);
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR);
+
+if(isset($this->INFO))
+    echo $this->message()->info($this->INFO);
+
+?>
+
+<form action="<?php echo $this->ACTION; ?>" method="post">
+
+<?php if(isset($this->ID)) { ?>
+<input type="hidden" name="id" value="<?php echo $this->ID; ?>" />
+<?php } ?>
+
+<h2><?php echo $this->t($this->TITLE); ?></h2>
+    <table border="0" width="100%">
+    <tr>
+        <td>
+            <label for="name"><?php echo $this->t('name');?></label>
+            <?php echo $this->formText('name', $this->NAME); ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="description"><?php echo $this->t('description');?></label>
+            <?php echo $this->editor('description', $this->DESCRIPTION); ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="type"><?php echo $this->t('type');?></label>
+            <?php echo $this->formSelect('type', $this->TYPE, array(), $this->ALL_TYPES); ?>
+        </td>
+    </tr>
+    <tr>
+        <td align="left">
+            <label for="expiry"><?php echo $this->t('valid_to');?></label>
+            <?php echo $this->dateChooser('expiry', $this->EXPIRY); ?>
+        </td>
+    </tr>
+    <tr>
+        <td align="left">
+            <label for="jobDoc"><?php echo $this->t('job_document');?></label>
+            <?php echo $this->itemChooser('jobDoc', null, array('itemtype' => _BIGACE_ITEM_FILE, 'remove' => true, 'item' => $this->JOB_DOC));?>
+        </td> 
+    </tr>
+    <tr>
+        <td align="left">
+            <label for="personDoc"><?php echo $this->t('person_document');?></label>
+            <?php echo $this->itemChooser('personDoc', null, array('itemtype' => _BIGACE_ITEM_FILE, 'remove' => true, 'item' => $this->PERSON_DOC));?>
+        </td>
+    </tr>
+    <tr>
+        <td align="left">
+            <label for="additionalDoc"><?php echo $this->t('additional_document');?></label>
+            <?php echo $this->itemChooser('additionalDoc', null, array('itemtype' => _BIGACE_ITEM_FILE, 'remove' => true, 'item' => $this->ADDITIONAL_DOC));?>
+        </td>
+    </tr>
+    <tr>
+        <?php if(isset($this->ID)) { ?>
+        <td align="left"><?php echo $this->saveButton('saveJob');?></td>
+        <?php } else { ?>
+        <td align="left"><?php echo $this->createButton('createJob');?></td>
+        <?php } ?>
+    </tr>
+    </table>
+
+</form>
+

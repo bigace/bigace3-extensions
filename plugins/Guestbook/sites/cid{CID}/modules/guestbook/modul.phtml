@@ -1,0 +1,368 @@
+<?php
+/**
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * Copyright (C) Kevin Papst.
+ *
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * For further information visit {@link http://www.kevinpapst.de www.kevinpapst.de}.
+ *
+ * @version $Id: modul.php 2 2011-01-31 13:29:57Z kevin $
+ * @author Kevin Papst
+ *
+ * =====================================================================================
+ *
+ * A simple Guestbook module
+ *
+ * TODO 3.0 support captcha - probably by using a zend_form?
+ *
+ * =====================================================================================
+ */
+
+import('classes.modul.ModulService');
+import('classes.modul.Modul');
+import('classes.util.html.FormularHelper');
+
+// property names
+define('GB_PROP_NAME_BOTTOM', 'guestbook_show_bottom_links');
+define('GB_PROP_NAME_TOP', 'guestbook_show_top_links');
+define('GB_PROP_NAME_LIMIT', 'guestbook_entrys_on_page');
+define('GB_PROP_NAME_CSS', 'guestbook_use_own_css');
+define('GB_PROP_NAME_BLACKLIST', 'guestbook_blacklist_words');
+define('GB_PROP_NAME_CAPTCHAS', 'guestbook_use_catchas');
+define('GB_PROP_NAME_EMAIL', 'guestbook_send_email');
+
+// load translations
+$this->t()->load('guestbook', $this->MENU->getLanguageID());
+
+$config = array(
+    GB_PROP_NAME_BOTTOM         => false,
+    GB_PROP_NAME_TOP            => true,
+    GB_PROP_NAME_LIMIT          => 5,
+    GB_PROP_NAME_CSS            => true,
+    GB_PROP_NAME_CAPTCHAS       => true,
+    GB_PROP_NAME_EMAIL          => true,
+    'guestbook_show_email'      => false,
+    'guestbook_no_follow'       => true,
+);
+
+// get the email configuration
+$MENU    = $this->MENU;
+$modul   = new Modul($MENU->getModulID());
+$service = new ModulService();
+$config  = $service->getModulProperties($MENU, $modul, $config);
+
+// some useful constants
+define('GUESTBOOK_PUBLIC_DIR', $this->directory() . '/guestbook/');
+define('GUESTBOOK_MODE_CREATE', 'createEntry');
+define('GUESTBOOK_PAGE_ENTRY_LIMIT', $config[GB_PROP_NAME_LIMIT]);
+
+// Show Admin Link
+if ($modul->isModulAdmin())
+{
+    $this->adminBar()->addModuleConfigLink();
+}
+
+if ($config[GB_PROP_NAME_CSS])
+{
+    $this->headLink()->appendStylesheet(GUESTBOOK_PUBLIC_DIR . 'guestbook.css');
+}
+
+echo '<div id="guestbook">';
+
+
+/* #########################################################################
+ * ##########################  Show create Formular ########################
+ * #########################################################################
+ */
+if (isset($_POST['mode']) && $_POST['mode'] == GUESTBOOK_MODE_CREATE)
+{
+    /**
+    * Create new entry with posted data
+    */
+    $gb_admin = new Bigace_Guestbook_Service();
+    $error = FALSE;
+    $errorMsg = '';
+
+    if (isset($data['name']) &&  $data['name'] != '' &&  isset($data['comment']) && $data['comment'] != '')
+    {
+        $blacklist = explode(',',$config[GB_PROP_NAME_BLACKLIST]);
+        $blackword = containsBlacklistWord($data['comment'], $blacklist);
+        if($blackword === false) {
+
+            $create = !$config[GB_PROP_NAME_CAPTCHAS];
+
+            if($config[GB_PROP_NAME_CAPTCHAS])
+            {
+                // FIXME support captchas
+                /*
+                $captcha = ConfigurationReader::getValue("system", "captcha", null);
+                if($captcha == null)
+                {
+                    $GLOBALS['LOGGER']->logError("Captcha failed, wrong configuration: 'system/captcha'");
+                }
+                else
+                {
+                    if(isset($data['attempt']) && isset($data['image']) && $captcha->validate($data['attempt'], $data['image'])) {
+                        $create = true;
+                    }
+                    else {
+                        $error = TRUE;
+                        $errorMsg = getTranslation('gb_captcha_failed');
+                        $create = false;
+                    }
+                }
+                */
+            }
+
+            if($create)
+            {
+                $res = $gb_admin->createEntry($data['name'], $data['email'], $data['hp'], $data['comment']);
+
+                if(strlen(trim($config[GB_PROP_NAME_EMAIL])) > 0) {
+                    mail($config[GB_PROP_NAME_EMAIL],getTranslation('gb_title_email'),getTranslation('gb_body_email') . createMenuLink($GLOBALS['_BIGACE']['PARSER']->getItemID()));
+                }
+
+                $showEntrys = true;
+            }
+        }
+        else {
+            $error = TRUE;
+            $errorMsg = getTranslation('gb_blackword') . ' <b>' . $blackword . '</b>';
+        }
+    }
+    else
+    {
+        $error = TRUE;
+        $errorMsg = getTranslation('gb_msg_enter_values');
+    }
+
+    if ($error)
+    {
+        showGBError($errorMsg);
+        echo '&nbsp;' . editEntry($data,$config[GB_PROP_NAME_CAPTCHAS], $MENU) . '&nbsp;';
+    }
+
+    unset ($res);
+    unset ($error);
+    unset ($gb_admin);
+}
+else if (isset($_GET['mode']) && $_GET['mode'] == "new")
+{
+    echo '&nbsp;' . editEntry($data,$config[GB_PROP_NAME_CAPTCHAS], $MENU) . '&nbsp;';
+}
+else
+{
+    $showEntrys = true;
+}
+
+// show page content on top
+if ($config['guestbook_content_top'])
+{
+    echo $this->content()->withDefaultContent();
+}
+
+if($showEntrys)
+{
+    // show the listing with the configured amount of entrys
+    if (isset($_GET['start']))
+        viewEntrys($_GET['start'], $config, $MENU);
+    else
+        viewEntrys(0, $config, $MENU);
+}
+
+echo '</div>';
+
+
+/**
+ * Try to find out, if any of the submitted words in in the Blacklist.
+ */
+function containsBlacklistWord($stringToParse,$blacklistWords)
+{
+    $stringToParse = strtolower($stringToParse);
+    foreach($blacklistWords as $blacklistWord){
+        if ( strpos($stringToParse,strtolower($blacklistWord)) !== false )
+            return $blacklistWord;
+    }
+    return false;
+}
+
+function showGBError($msg)
+{
+    echo '<br><br><p style="color:red" align="center">'.$msg.'</p>';
+}
+
+/**
+* Show a list of Guestbook Entrys.
+*/
+function viewEntrys($from, $config, $MENU)
+{
+    $showTopLinks    = $config[GB_PROP_NAME_TOP];
+    $showBottomLinks = $config[GB_PROP_NAME_BOTTOM];
+    $showEmail       = $config['guestbook_show_email'];
+    $useNofollow     = $config['guestbook_no_follow'];
+
+    $gb_info = new Bigace_Guestbook_Enumeration($from, GUESTBOOK_PAGE_ENTRY_LIMIT);
+    $entries = $gb_info->countEntrys();
+
+    ?>
+    <div id="guestbook">
+        <div class="gbheader">
+            <?php
+            echo '<p align="right"><a href="'.LinkHelper::itemUrl($MENU, array('mode'=>'new')).'" title="'.getTranslation('gb_new_link').'">';
+            echo '<img src="'.GUESTBOOK_PUBLIC_DIR.'create.gif" style="margin-right:5px;" alt="">';
+            echo getTranslation('gb_new_link');
+            echo '</a></p>';
+            ?>
+        </div>
+        <?php
+
+        if ($showTopLinks || $showBottomLinks)
+        {
+            $bla = $gb_info->countAllEntrys();
+            $iitemp = $bla / GUESTBOOK_PAGE_ENTRY_LIMIT;
+            $links = '';
+            if ($iitemp > 1 ) {
+                for ($i=0; $i < $iitemp; $i++)
+                {
+                    $links .= '<a href="'.LinkHelper::itemUrl($MENU, array('start' => $i*GUESTBOOK_PAGE_ENTRY_LIMIT) ).'" title="" class="';
+                    if ($i+1 > ($from / GUESTBOOK_PAGE_ENTRY_LIMIT) && $i < ($from / GUESTBOOK_PAGE_ENTRY_LIMIT)+1) {
+                       $links .= 'pagelinkSelected';
+                    } else {
+                       $links .= 'pagelink';
+                    }
+
+                    $links .= '"><img src="'.GUESTBOOK_PUBLIC_DIR.'arrow.gif" class="imglink" alt="'.getTranslation('gb_page').' '.($i+1).'">'.getTranslation('gb_page').' '.($i+1).'</a>';
+                }
+            }
+
+            if ($showTopLinks && $iitemp > 1)
+            {
+                ?>
+                <div class="gbpages">
+                <p><?php echo $links; ?></p>
+                </div>
+                <?php
+            }
+        }
+
+        for ($i = 0; $i < $entries; $i++)
+        {
+            $current_gb = $gb_info->getNextEntry();
+
+            $name = $current_gb->getName();
+            if ($showEmail && $current_gb->getEmail() != "") {
+                if ($name != "" && $name != "@") {
+                    $name = '<a href="mailto:'.$current_gb->getEmail().'">'.$name.'</a>';
+                }
+            }
+
+            ?>
+
+            <div class="gbEntry">
+                <p class="gbEntryTitle">
+                    <?php
+                    if ($current_gb->getHomepage() != "" && $current_gb->getHomepage() != "http://") {
+                        if($useNofollow) echo '<a rel="nofollow"';
+                        else echo '<a';
+
+                        echo ' href="'.$current_gb->getHomepage().'" target="_blank" class="homelink" title="'.$current_gb->getHomepage().'"><img src="'.GUESTBOOK_PUBLIC_DIR.'home.gif" alt="'.getTranslation('gb_hp_link_alt').'"></a>';
+                    }
+                    echo ' ' . $name . ' ' . getTranslation('gb_wrote') . ' ' . date("d.m.Y", $current_gb->getDate());
+                    ?>
+                </p>
+                <p class="gbEntryComment">
+                    <?php echo str_replace("\n", "<br>", $current_gb->getComment()); ?>
+                </p>
+            </div>
+
+            <?php
+        }
+
+        if($showBottomLinks && $iitemp > 1)
+        {
+        ?>
+        <div class="gbpages">
+        <p><?php echo $links; ?></p>
+        </div>
+        <?php
+        }
+        ?>
+
+    </div>
+    <?php
+}
+
+
+/**
+* Edit new Guestbook Entry
+*/
+function editEntry($data, $useCaptcha, $MENU)
+{
+    if ( !isset($data['name']) )    { $data['name'] = ''; }
+    if ( !isset($data['hp']) )      { $data['hp'] = 'http://'; }
+    if ( !isset($data['email']) )   { $data['email'] = ''; }
+    if ( !isset($data['comment']) ) { $data['comment'] = ''; }
+    if ( !isset($data['title']) )   { $data['title'] = getTranslation('gb_create_entry'); }
+    if ( !isset($data['gbid']) )    { $data['gbid'] = ''; }
+    if ( !isset($data['mode']) )    { $data['mode'] = GUESTBOOK_MODE_CREATE; }
+    if ( !isset($data['submit']) )  { $data['submit'] = getTranslation('gb_save'); }
+
+    $entries = array(
+            getTranslation('gb_name')       => createTextInputType('name', $data['name'], '255'),
+            getTranslation('gb_email')      => createTextInputType('email', $data['email'], '255'),
+            getTranslation('gb_homepage')   => createTextInputType('hp', $data['hp'], '255'),
+            getTranslation('gb_comment')    => createTextArea('comment',$data['comment'],'5','40'),
+    );
+
+    if ($useCaptcha) {
+        /*
+        $captcha = ConfigurationReader::getValue("system", "captcha", null);
+        if($captcha == null) {
+            $GLOBALS['LOGGER']->logError("Captcha failed, wrong configuration: 'system/captcha'");
+        }
+        else {
+            $ccode = $captcha->get();
+            $captchaImg = '<img src="'.$ccode.'" alt="'.getTranslation('gb_captcha_alt').'" title=""><br>'."\n";
+            $entries[getTranslation('gb_captcha')] = $captchaImg . getTranslation('gb_captcha_info') . "<br>" . createTextInputType('attempt', '', '255');
+        }
+        */
+    }
+
+    $configTable = array(
+                    'width'         =>  '100%',
+                    'valign'        =>  array (
+                                            'left'      =>  'top'
+                                        ),
+                    'align'         =>  array (
+                                            'table'     =>  'left',
+                                            'left'      =>  'left'
+                                        ),
+                    'image'         =>  GUESTBOOK_PUBLIC_DIR . 'create.gif',
+                    'title'         =>  $data['title'],
+                    'form_action'   =>  LinkHelper::itemUrl($MENU),
+                    'form_method'   =>  'post',
+                    'form_hidden'   =>  array(
+                                            'mode'         =>  $data['mode'],
+                                            'data[image]'  =>  $ccode,
+                                            'data[gbid]'   =>  $data['gbid']
+                                    ),
+                    'entries'       =>  $entries,
+                    'form_submit'   =>  true,
+                    'submit_label'  =>  $data['submit']
+    );
+    unset($data);
+    return createTable($configTable);
+}

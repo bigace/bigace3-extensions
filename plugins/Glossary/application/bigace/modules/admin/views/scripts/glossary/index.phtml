@@ -1,0 +1,77 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR);
+
+if(isset($this->INFO))
+    echo $this->message()->info($this->INFO);
+
+$abbr = array();
+foreach($this->ENTRIES as $entry)
+    $abbr[strtolower($entry['abbreviation'])] = $entry;
+ksort($abbr);
+
+?>
+
+<p><?php echo $this->t('glossary_info'); ?></p>
+
+<?php
+echo $this->portletHeader($this->t('glossary_portlet') . ' ('.count($this->ENTRIES).')', array('full' => true));
+?>
+
+<table width="100%" class="nicetable">
+  <thead>
+    <tr>
+        <th width="200"><?php echo $this->t('abbreviation'); ?></th>
+        <th><?php echo $this->t('description'); ?></th>
+        <th width="130" align="center"><?php echo $this->t('action'); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+<?php    
+
+    foreach($abbr as $entry)
+    {
+        echo '
+        <tr>
+            <td>
+                <span id="'.$entry['abbreviation'].'">'.$entry['abbreviation'].'</span>
+            </td>
+            <td>
+                '.htmlspecialchars($entry['description']).'
+            </td>
+            <td align="center">
+                '.$this->deleteLink($entry['delete']).'
+            </td>
+        </tr>';
+    }
+        
+?>
+  </tbody>
+</table>
+
+<?php
+
+echo $this->portletFooter();
+
+?>
+
+<form action="<?php echo $this->ADD_ACTION; ?>" method="post">
+    <fieldset>
+        <legend><?php echo $this->t('create_glossary'); ?></legend>
+        
+        <label for="abbr"><?php echo $this->t('abbreviation');?></label>
+        <?php echo $this->formText('abbr'); ?>
+
+        <label for="description"><?php echo $this->t('description');?></label>
+        <?php echo $this->formTextarea('description'); ?>
+        
+        <?php echo $this->createButton('create');?>
+    </fieldset>
+</form>
+
+

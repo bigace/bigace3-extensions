@@ -1,0 +1,64 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: jobtypes.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+echo $this->backlink($this->BACK_URL);
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR);
+
+if(isset($this->INFO))
+    echo $this->message()->info($this->INFO);
+
+?>
+
+    <?
+    echo $this->portletHeader($this->t('admin_jobtypes'), array('full' => true));
+    ?>
+
+    <table width="100%" class="nicetable">
+      <thead>
+        <tr>
+            <th><?php echo $this->t('name'); ?></th>
+            <th width="200" align="center"><?php echo $this->t('action'); ?></th>
+        </tr>
+      </thead>
+      <tbody>
+    <?php    
+
+        foreach($this->ALL_TYPES as $entry)
+        {
+            echo '
+            <tr>
+                <td>
+                    <form action="'.$entry['update'].'" method="post">
+                    <input type="hidden" name="id" value="'.$entry['id'].'" />
+                    '.$this->formText('name', $entry['name']).'
+                    '.$this->saveButton('save'.$entry['id']).'
+                    </form>
+                </td>
+                <td align="center">
+                    '.((isset($entry['delete']) && $entry['delete'] !== null) ? $this->deleteLink($entry['delete']) : '').'
+                </td>
+            </tr>';
+        }
+            
+    ?>
+      </tbody>
+    </table>
+
+    <?php
+    echo $this->portletFooter();
+    ?>
+
+    <form action="<?php echo $this->ACTION; ?>" method="post">
+    <fieldset>
+        <legend><?php echo $this->t('new_jobtype'); ?></legend>
+        <label for="newName"><?php echo $this->t('name'); ?></label>
+        <?php echo $this->formText('name','',array('id'=>'newName')); ?>
+        <?php echo $this->createButton('create'); ?>
+    </fieldset>
+    </form>
+

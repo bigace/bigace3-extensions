@@ -1,0 +1,42 @@
+##############################################################
+# README for the Highlighter Plugin
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Installation
+=================
+To install the "Highlighter plugin" extension follow these simple steps:
+
+ 1. Upload the extension using the Administration panel
+ 2. Install the Highlighter extension
+
+
+Introduction 
+=============
+Highlighter is an extension that helps developers to display code on their website.
+
+The Plugin uses the <a target="_blank" href="http://alexgorbatchev.com/SyntaxHighlighter">Javascript SyntaxHighlighter by Alex Gorbatchev</a>
+to highlight source code in your content.  
+
+Please read its docu to get more information on how to style code blocks properly.
+
+Usage
+===============
+Activate the Highlighter in your template:
+
+$this->highlighter()->addBrush('Php')->activate();
+
+IMPORTANT: You need to call this <u>before</u> your HTML &lt;head&gt; is rendered!
+
+And then add content to your page that looks like this:
+
+&lt;pre class="brush: php"&gt;
+    &lt;?php
+        $name = "Hello" . ' ' . "World"; 
+        echo $name;
+    ?&gt; 
+&lt;/pre&gt;
+
+Changelog
+=================
+1.0: initial release

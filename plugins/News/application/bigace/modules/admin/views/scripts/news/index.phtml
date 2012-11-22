@@ -1,0 +1,141 @@
+<?php
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst 
+	@copyright Copyright (C) Kevin Papst 
+	@version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */
+
+if (isset($this->ERROR) && $this->ERROR !== null)
+    echo $this->message()->error($this->ERROR);
+
+if (isset($this->INFO) && $this->INFO !== null)
+    echo $this->message()->info($this->INFO);
+
+if(count($this->NEWS) == 0 && count($this->UNPUBLISHED) == 0)
+    echo $this->message()->info($this->t("error_nonews"));
+
+?>
+
+<div id="newsHeader" style="width:100%;margin-bottom:10px;">
+<table border="0" width="100%">
+  <tr>
+    <td align="left">
+	<?php if($this->PERM_CREATE) { ?>
+        <a href="<?php echo $this->CREATE_URL; ?>"><?php echo $this->t("news_header_create"); ?></a>
+	<?php } ?>
+	</td>
+	<td align="right">
+	<?php if(isset($this->ARCHIVES) && count($this->ARCHIVES) > 0) { ?>
+	<form action="<?php echo $this->ARCHIVE_URL; ?>" method="post">
+	<select name="ts" onchange="this.form.submit();">
+	    <option value="0"><?php echo $this->t('news_archive_new'); ?></option>
+    	<?php 
+	    foreach($this->ARCHIVES as $arch) { 
+	        $ts = $arch->getTimestamp();
+	        echo '<option value="'.$ts.'"';
+	        if ($this->ARCHIVE_TS == $ts)
+	            echo ' selected="selected"';
+	        echo '>'.$this->date($ts,Zend_Date::MONTH_NAME." ".Zend_Date::YEAR).' ('.$arch->getAmount().')</option>';
+	    }
+    	?>
+	</select>
+	</form>
+	<?php } ?>
+	</td>
+  </tr>	
+</table>  
+</div>
+
+<?php if(count($this->UNPUBLISHED) > 0) { ?>
+<?php echo $this->portletHeader($this->t('news_unpublished'), array('full' => true)); ?>
+ <table class="nicetable" width="100%" cellspacing="0">
+ <colgroup>
+     <col />
+     <col width="170" />
+     <col width="170" />
+</colgroup>     
+ <thead>
+	<tr>
+	    <th><?php echo $this->t("news_title"); ?> &amp; <?php echo $this->t("news_teaser"); ?></th>
+		<th align="center"><?php echo $this->t("news_date"); ?></th>
+    	<th align="center"><?php echo $this->t("action"); ?></th>
+    </tr>
+ </thead>
+ <tbody>
+ <?php foreach($this->UNPUBLISHED as $item) { 
+            $newsPage = $item['item'];
+ ?>
+    <tr>
+	    <td align="left">
+			<?php 
+			    if($this->PERM_EDIT) { 
+			        echo '<a href="'.$item['edit'].'">'.$newsPage->getTitle().'</a>';
+			    } else {
+    			    echo $newsPage->getTitle();
+			    } 
+			?>
+			<br/>
+			<span class="light"><?php echo $newsPage->getTeaser(); ?></span>
+		</td>
+	    <td align="center"><?php echo $this->date($newsPage->getDate(), null, true); ?></td>
+	    <td align="center">
+    	    <?php echo $this->previewLink(LinkHelper::itemUrl($newsPage)); ?>
+	    	<?php 
+	    	    if($this->PERM_DELETE) { 
+	                echo $this->deleteLink($item['delete']);
+	    	    } 
+	    	?>
+	    </td>
+    </tr>
+ <?php } ?>
+ </tbody>
+ </table>
+ <?php echo $this->portletFooter(); ?>
+<?php } ?>
+
+<?php if(count($this->NEWS) > 0) { ?>
+<?php echo $this->portletHeader($this->t('news_published'), array('full' => true)); ?>
+ <table class="nicetable" width="100%" cellspacing="0">
+ <colgroup>
+     <col />
+     <col width="170" />
+     <col width="170" />
+</colgroup>     
+ <thead>
+	<tr>
+	    <th><?php echo $this->t("news_title"); ?> &amp; <?php echo $this->t("news_teaser"); ?></th>
+		<th align="center"><?php echo $this->t("news_date"); ?></th>
+    	<th align="center"><?php echo $this->t("action"); ?></th>
+    </tr>
+ </thead>
+ <tbody>
+ <?php foreach($this->NEWS as $item) { 
+            $newsPage = $item['item'];
+ ?>
+    <tr>
+	    <td align="left">
+			<?php 
+			    if($this->PERM_EDIT) { 
+			        echo '<a href="'.$item['edit'].'">'.$newsPage->getTitle().'</a>';
+			    } else {
+    			    echo $newsPage->getTitle();
+			    } 
+			?>
+			<br/>
+			<span class="light"><?php echo $newsPage->getTeaser(); ?></span>
+		</td>
+	    <td align="center"><?php echo $this->date($newsPage->getDate(), null, true); ?></td>
+	    <td align="center">
+    	    <?php echo $this->previewLink(LinkHelper::itemUrl($newsPage)); ?>
+	    	<?php 
+	    	    if($this->PERM_DELETE) { 
+	                echo $this->deleteLink($item['delete']);
+	    	    } 
+	    	?>
+	    </td>
+    </tr>
+ <?php } ?>
+ </tbody>
+ </table>
+ <?php echo $this->portletFooter(); ?>
+<?php } ?>
+

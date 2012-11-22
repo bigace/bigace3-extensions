@@ -1,0 +1,107 @@
+<?php
+/**
+ * Photo gallery v1.
+ *
+ * Copyright (C) Kevin Papst
+ *
+ * @version $Id$
+ * @author Kevin Papst
+ */
+
+// ----------------------------------------------------------
+// Module code starts here
+
+import('classes.util.links.ThumbnailLink');
+import('classes.modul.ModulService');
+import('classes.modul.Modul');
+
+$this->t()->load('fotogallery', $this->MENU->getLanguageID());
+
+$properties = array(
+    'fotogallery_image_category'    => null,
+    'fotogallery_show_name'         => null,
+    'fotogallery_content_top'       => null,
+    'fotogallery_content_bottom'    => null,
+    'fotogallery_show_description'  => null,
+    'fotogallery_thumb_height_px'   => null,
+    'fotogallery_thumb_width_px'    => null,
+    'fotogallery_full_height_px'    => null,
+    'fotogallery_full_width_px'     => null,
+    'fotogallery_sort_name'         => null,
+    'fotogallery_sort_reverse'      => null,
+    'fotogallery_jquery'            => null,
+    'fotogallery_renderer'          => null,
+    'fotogallery_internal_css'      => null,
+    'fotogallery_language'          => null
+);
+
+$menu    = $this->MENU;
+$module  = new Modul($menu->getModulID());
+$service = new ModulService();
+$config  = $service->getModulProperties($menu, $module, $properties);
+
+// Show Admin Link
+if ($module->isModulAdmin()) {
+    $this->adminBar()->addModuleConfigLink();
+}
+
+$all = array();
+foreach ($properties as $k => $v) {
+    if (!isset($config[$k]) || $config[$k] === null) {
+        echo '<h3>'.getTranslation('gallery_unconfigured').': '.$k.'</h3>';
+        return;
+    }
+    $nk = str_replace('fotogallery_', '', $k);
+    $all[$nk] = $config[$k];
+}
+
+if ($all['image_category'] === null) {
+    echo '<h3>'.getTranslation('gallery_unconfigured').'</h3>';
+    return;
+}
+
+$request = new Bigace_Item_Request(_BIGACE_ITEM_IMAGE);
+$request->setCategory($all['image_category']);
+if ($all['sort_reverse']) {
+    $request->setOrder(Bigace_Item_Request::ORDER_DESC);
+}
+if ($all['sort_name']) {
+    $request->setOrderBy('name');
+}
+if ($all['language'] !== null && $all['language'] != '') {
+    $request->setLanguageID($all['language']);
+}
+
+$images = new Bigace_Item_Walker($request);
+
+if ($images->count() == 0) {
+    echo '<h3>'.getTranslation('gallery_empty').'<h3>';
+    return;
+}
+
+if ($all['content_top']) {
+    echo $this->content()->withDefaultContent();
+}
+
+// optional include jquery if layout does not include it
+if ($all['jquery']) {
+    $this->headScript()->prependFile($this->directory('public') . 'jquery/jquery.js');
+}
+
+// optional internal stylesheet for default styling
+if ($all['internal_css']) {
+    $this->headLink()->appendStylesheet($this->directory() . 'css/fotogallery.css');
+}
+
+echo '<div id="fotogallery" class="gallery-'.$all['renderer'].'">';
+
+// load partial renderer and pass config and images
+echo $this->partial(
+    'fotogallery/'.$all['renderer'].'.phtml', array('config' => $all, 'images' => $images)
+);
+
+echo '</div><div class="gallery-clearer">&nbsp;</div>';
+
+if ($all['content_bottom']) {
+    echo $this->content()->withDefaultContent();
+}

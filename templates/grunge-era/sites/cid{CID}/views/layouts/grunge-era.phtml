@@ -1,0 +1,150 @@
+<?php 
+
+$this->t()->load('bigace');
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $this->MENU->getLanguageID());
+if($topLevel === null)
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+$layout = $this->directory().'grunge-era/';
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<title>GrungeEra</title>
+
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+<?php echo $this->headStyle(); ?>
+<?php echo $this->headLink(); ?>
+
+<?php echo $this->headMeta(); ?>
+
+<?php echo $this->metatags($this->MENU); ?>
+
+<?php echo $this->headScript(); ?>
+
+
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $layout; ?>style/screen.css" />
+</head>
+<body>
+<div id="wrap">
+
+    <a name="top"></a>
+
+	<div id="header">	
+
+        <h1 id="logo-text"><a href="<?php echo $this->link($this->topLevel);?>" title=""><?php echo $this->sitename();?></a></h1>		
+		        <p id="intro">Just another styleshout css template</p>				
+
+		<div  id="nav">
+			<ul>
+				<?php 
+            echo '<li><a href="'.$this->link($topLevel).'"';
+            if($this->MENU->getID() == 
+                $topLevel->getID())
+                echo ' class="current"';
+            echo '>'.$topLevel->getName().'</a></li>';
+
+            echo $this->menu(
+                $topLevel, 
+                array(
+                    'prefix' => '<li>', 
+                    'suffix' => '</li>', 
+                    'selected' => 'current', 
+                    'select' => $this->MENU, 
+                )
+            );
+        ?>
+        </ul>
+		</div>
+
+	</div>	
+
+	<div id="content-outer" class="clear"><div id="content-wrap" >	
+		
+		<div class="content">
+		
+			<?php
+            echo $this->content();?>
+
+	    </div>
+	</div>	
+
+	<div id="footer-outer" class="clear"><div id="footer-wrap">				
+		
+		<div class="content">	
+
+			<div class="columns">
+			
+				<div class="col">						
+					<div class="footer-list">
+					<h3>Resource Links</h3>		
+				<ul>
+							<li><a href="http://www.dreamtemplate.com" title="Website Templates">DreamTemplate -
+                                <span>Over 6,000+ Premium Web Templates</span></a></li>
+							<li><a href="http://www.themelayouts.com" title="WordPress Themes">ThemeLayouts -
+                                <span>Premium WordPress &amp; Joomla Themes</span></a></li>
+							<li><a href="http://www.imhosted.com" title="Website Hosting">ImHosted.com -
+                                <span>Affordable Web Hosting Provider</span></a></li>
+							<li><a href="http://www.dreamstock.com" title="Stock Photos">DreamStock -
+                                <span>Download Amazing Stock Photos</span></a></li>
+							<li><a href="http://www.evrsoft.com" title="Website Builder">Evrsoft -
+                                <span>Website Builder Software &amp; Tools</span></a></li>
+							<li><a href="http://www.webhostingwp.com" title="Web Hosting">Web Hosting -
+                                <span>Top 10 Hosting Reviews</span></a></li>
+				</ul>	
+
+					</div>	
+				</div>	
+				
+				<div class="col">
+				
+					<h3><?php echo $this->t('search');?></h3>
+					
+					<form id="quick-search" action="<?php echo $allLinks['search']; ?>" method="post" onsubmit="return doQuickSearch();">
+						<p>
+						<label for="qsearch">Search:</label>
+						<input class="tbox" id="qsearch" type="text" name="search" value="" title="" />
+						<input type="hidden" name="language" value="<?php echo $this->MENU->getLanguageID(); ?>" />
+						<input class="btn" alt="<?php echo $this->t('search');?>" value="<?php echo $this->t('search_button'); ?>" type="image" name="searchsubmit" title="Search" src="<?php echo $layout; ?>images/search.gif" />
+						</p>
+					</form>	
+
+				</div>	
+
+			</div>
+				
+		</div>
+
+	</div>
+	
+	</div>
+	
+	<div id="footer-bottom">	
+		<p>
+			<?php 
+            echo '<a href="'.$this->link($topLevel).'"';
+            
+            echo '>'.$topLevel->getName().'</a> | ';
+
+            echo $this->menu(
+                $topLevel, 
+                array(
+                    'prefix' => '', 
+                    'suffix' => ' | ', 
+                )
+            );?> 
+
+			<a href="#top">Top</a>							
+			&nbsp;&nbsp;&nbsp;
+			&copy; Copyright <?php echo date('Y', time()); ?>
+            <?php echo Bigace_Config::get("community", "copyright.holder", "BIGACE CMS"); ?>.
+            &nbsp;&nbsp;&nbsp;
+             Template by <a href="http://www.styleshout.com/">styleshout</a>
+		</p>
+	</div>			
+
+</div>
+</body>
+</html>

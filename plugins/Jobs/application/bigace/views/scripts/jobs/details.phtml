@@ -1,0 +1,37 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: details.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+$this->t()->load('jobs');
+
+$job = $this->JOB;
+$type = $this->TYPE;
+
+echo '<div id="job">';
+
+    echo '<a class="back" href="'.$this->BACK_URL.'">'.sprintf($this->t('back_listing'),$type['title']).'</a>';
+
+    echo '<h2>'.sprintf($this->t('current_job'),$type['title']).'</h2>';
+    
+    echo '<h3>'.$job['title'].'</h3>';
+    echo '<div class="description">'.$job['description'].'</div>';
+    
+    if(isset($job['job_doc']) || isset($job['person_doc']) || isset($job['additional_doc']))
+    {
+        echo '<ul class="jobdocs">';
+        if(isset($job['job_doc']))
+            echo '<li><a class="'.array_pop(explode(".", $job['job_doc']->getUniqueName())).'" href="'.$this->link($job['job_doc']).'">'.$this->t('job_document').'</a></li>';
+        if(isset($job['person_doc']))
+            echo '<li><a class="'.array_pop(explode(".", $job['person_doc']->getUniqueName())).'" href="'.$this->link($job['person_doc']).'">'.$this->t('person_document').'</a></li>';
+        if(isset($job['additional_doc']))
+            echo '<li><a class="'.array_pop(explode(".", $job['additional_doc']->getUniqueName())).'" href="'.$this->link($job['additional_doc']).'">'.$this->t('additional_document').'</a></li>';
+        echo '</ul>';
+    }
+
+    echo '<div class="closingdate">'.sprintf($this->t('available_until'),$this->date($job['valid_to'])).'.</div>';
+    
+echo '</div>';
+    
+?>

@@ -1,0 +1,150 @@
+<?php /* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 190 2011-04-04 14:40:02Z kevin $ */
+
+if (isset($this->ERROR)) {
+    echo $this->message($this->ERROR, 'error');
+}
+
+if (isset($this->INFO)) {
+    echo $this->message($this->ERROR, 'info');
+}
+
+$this->tabpane()->add($this->t('title_existing_template'));
+$this->tabpane()->add($this->t('create'));
+
+echo $this->tabpane()->begin();
+
+?>
+
+    <?php echo $this->tabpane()->next(); ?>
+
+    <table class="nicetable selftable" width="100%" cellspacing="0">
+    <colgroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col width="130"/>
+    </colgroup>
+    <thead>
+        <tr>
+	        <th><?php echo $this->t('name'); ?></th>
+	        <th><?php echo $this->t('description'); ?></th>
+	        <th align="center"><?php echo $this->t('is_in_work'); ?></th>
+	        <th align="center"><?php echo $this->t('is_template'); ?></th>
+	        <th align="center"><?php echo $this->t('is_include'); ?></th>
+	        <th align="center"><?php echo $this->t('action'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+		  $i = 0;
+		  foreach($this->templates as $tpl) {
+			$i++;
+		?>
+        <tr>
+            <td noWrap="noWrap">
+				<a href="<?php echo $tpl['edit']; ?>" class="tooltip" title="<?php echo $tpl['filename']; ?>"><?php echo $tpl['name']; ?></a>
+            </td>
+            <td><?php echo $tpl['description']; ?></td>
+            <td align="center">
+                <img src="<?php echo $this->STYLE; ?><?php if($tpl['inWork']) { ?>inactive.png<?php } else { ?>active.png<?php } ?>" />
+            </td>
+        <?php if($tpl['include']) { ?>
+            <td align="center"></td>
+            <td align="center"><img src="<?php echo $this->STYLE; ?>sign_yes.png"/></td>
+        <?php } else { ?>
+            <td align="center"><img src="<?php echo $this->STYLE; ?>sign_yes.png"/></td>
+            <td align="center"></td>
+        <?php } ?>
+            <td align="center">
+			<?php
+			if($tpl['usage'] == 0) {
+				echo $this->deleteLink($tpl['delete'], array('onclick' => 'return confirm("'.$this->t('ask_delete').'")'));
+			}
+			?>
+            </td>
+        </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+
+<?php echo $this->tabpane()->next(); ?>
+
+    <fieldset>
+        <legend><?php echo $this->t('title_create_template'); ?></legend>
+        <form action="<?php echo $this->CREATE_URL; ?>" method="post">
+            <table width="100%" cellspacing="0">
+            <colgroup>
+                <col width="200" />
+                <col width="" />
+            </colgroup>
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo $this->t('name'); ?></td>
+            		<td>
+            			<?php echo $this->formText("templatename"); ?>
+            		</td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('description'); ?></td>
+            		<td>
+            			<?php echo $this->formText("description"); ?>
+            		</td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('is_template'); ?></td>
+                    <td><input type="radio" name="isinclude" value="0" /></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('is_include'); ?></td>
+                    <td><input type="radio" name="isinclude" value="1" checked="checked" /></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('action'); ?></td>
+                    <td><?php echo $this->createButton('createTpl'); ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </fieldset>
+
+    <fieldset>
+        <legend><?php echo $this->t('title_copy_template'); ?></legend>
+        <form action="<?php echo $this->CREATE_URL; ?>" method="post">
+            <input type="hidden" name="mode" value="copy" />
+            <table cellspacing="0" width="100%">
+            <colgroup>
+              <col width="200" />
+              <col width="" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td><?php echo $this->t('name'); ?></td>
+            		<td><?php echo $this->formText("templatename"); ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('description'); ?></td>
+            		<td><?php echo $this->formText("description"); ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('copy_of'); ?></td>
+                    <td><?php echo $this->tplcopy; ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->t('action'); ?></td>
+                    <td><?php echo $this->createButton('copyTpl'); ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </fieldset>
+
+<?php echo $this->tabpane()->end(); ?>

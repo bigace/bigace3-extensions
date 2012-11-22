@@ -1,0 +1,27 @@
+<?php
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst 
+	@copyright Copyright (C) Kevin Papst 
+	@version $Id: delete.phtml 4 2010-07-17 14:20:17Z kevin $ */
+?>
+
+<?php echo $this->backlink( $this->BACK_URL ); ?>
+
+<h2><?php echo $this->t("news_delete_question"); ?></h2>
+<form action="<?php echo $this->ACTION; ?>" method="POST">
+    <input type="hidden" name="newsID" value="<?php echo $this->NEWS->getID(); ?>">
+    <input type="hidden" name="newsLangID" value="<?php echo $this->NEWS->getLanguageID(); ?>">
+
+    <label><?php echo $this->t("news_title"); ?></label>
+    <div><?php echo $this->NEWS->getTitle(); ?></div>
+
+<?php if ($this->NEWS->getTeaser() != '') { ?>
+    <label><?php echo $this->t("news_teaser"); ?></label>
+    <div><?php echo $this->NEWS->getTeaser(); ?></div>
+<?php } ?>
+
+    <label><?php echo $this->t("news_date"); ?></label>
+    <div><?php echo $this->date($this->NEWS->getDate()); ?></div>
+
+    <?php echo $this->formButton('delete', $this->t("delete"), array('type' => 'submit')); ?>
+</form>

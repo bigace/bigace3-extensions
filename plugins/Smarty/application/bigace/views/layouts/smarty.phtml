@@ -1,0 +1,59 @@
+<?php
+/**
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ *
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: smarty.phtml 190 2011-04-04 14:40:02Z kevin $
+ */
+
+/**
+ * Zend layout that gives us backward compatibility for sites running
+ * with Smarty templates.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ */
+
+// fix for some old smarty tags that rely on this function
+$GLOBALS['MENU'] = $this->MENU;
+
+$layout   = $this->layout();
+$smarty   = $layout->SMARTY;
+$template = $layout->SMARTY_LAYOUT->getTemplate();
+$names    = $layout->CONTENT_NAMES;
+
+// assign all content pieces
+if ($names !== null && is_array($names) && count($names) > 0) {
+    foreach ($names as $name) {
+        $smarty->assign($name, $this->layout()->{$name});
+    }
+}
+
+// and now all variables that were added to the view
+foreach ($this->getVars() as $k => $v) {
+    $smarty->assign($k, $v);
+}
+//$smarty->assign('LAYOUT', $this->LAYOUT);               // new since 3.0
+//$smarty->assign('MENU', $this->MENU);
+//$smarty->assign('USER', $this->USER);
+
+$smarty->assign('VIEW', $this);                         // new since 3.0
+$smarty->assign('CONTENT', $this->layout()->content);
+
+// finally display everything
+$smarty->display($template->getFilename());

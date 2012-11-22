@@ -1,0 +1,56 @@
+<?php
+// TODO allow configurable image ???
+/*
+ * support those tags:
+ *
+ * <language>en-en</language>
+ * <generator>{bigace_version full=true}</generator>
+ * <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+ * <copyright>Copyright holder</copyright>
+ * <managingEditor>email@yourdomain.com (Your Name)</managingEditor>
+ * <webMaster>email@yourdomain.com (Your Name)</webMaster>
+ *
+ */
+
+// load translations
+$this->t()->load('comments');
+
+/* @var $newsEntry Bigace_News_Item */
+$home = LinkHelper::url('');
+$feed = new Zend_Feed_Writer_Feed();
+$feed->setTitle($this->sitename());
+$feed->setGenerator('Bigace', $this->version(true), Bigace_Core::WEBSITE);
+$feed->setDescription(sprintf($this->t('comment.feed.description'), $this->sitename()));
+$feed->setLink($home);
+$feed->setFeedLink($this->FEED_URL, $this->FEED_TYPE);
+$feed->addAuthor(
+    array(
+        'name'  => Bigace_Config::get('community', 'copyright.holder'),
+        'email' => Bigace_Config::get('community', 'contact.email'),
+        'uri'   => $home,
+    )
+);
+$feed->setDateModified(time());
+
+// if you want them in a different order:
+// $comments = array_reverse($this->COMMENTS);
+$comments = $this->COMMENTS;
+
+foreach ($comments as $comment) {
+    /* @var $entry Bigace_Comment_Entry */
+    $item    = Bigace_Item_Basic::get($comment->getItemtype(), $comment->getItemid(), $comment->getLanguage());
+    $itemUrl = LinkHelper::itemurl($item);
+    $content = $comment->getComment();
+    $content = $content.'<br/><a href="'.$itemUrl.'#comment'.$comment->getId().'">'.$this->t('comment.feed.link').'</a>';
+
+    $entry = $feed->createEntry();
+    $entry->setTitle(sprintf($this->t('comment.feed.title'), $comment->getName(), $item->getName()));
+    $entry->setLink($itemUrl);
+    $entry->setDateModified($comment->getTimestamp());
+    $entry->setDateCreated($comment->getTimestamp());
+    //$entry->setDescription('');
+    $entry->setContent($content);
+
+    $feed->addEntry($entry);
+}
+echo $feed->export( $this->FEED_TYPE );

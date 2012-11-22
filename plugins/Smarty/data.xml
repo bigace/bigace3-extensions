@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!--
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License 
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ * 
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: data.xml 306 2010-02-04 19:04:44Z bigace $
+-->
+<content version="1.0">
+
+    <table name="configuration">
+        <row>
+            <cid key="true">{CID}</cid>
+            <package key="true">templates</package>
+            <name key="true">default</name>
+            <value>BLIX</value>
+            <type>layout</type>
+            <extended></extended>
+        </row>
+    </table>
+
+    <table name="template">
+        <row>
+            <name key="true">BLIX</name>
+            <cid key="true">{CID}</cid>
+            <description>The default Template for BIGACE.</description>
+            <inwork>0</inwork>
+            <include>0</include>
+            <timestamp function="true">unix_timestamp()</timestamp>
+            <userid>1</userid>
+            <filename>BLIX.tpl</filename>
+        </row>
+        <row>
+            <name key="true">BLIX (Footer)</name>
+            <cid key="true">{CID}</cid>
+            <description>Footer for the BLIX Design.</description>
+            <inwork>0</inwork>
+            <include>1</include>
+            <timestamp function="true">unix_timestamp()</timestamp>
+            <userid>1</userid>
+            <filename>BLIX+Footer.tpl</filename>
+        </row>
+        <row>
+            <name key="true">BLIX (Header)</name>
+            <cid key="true">{CID}</cid>
+            <description>Header of the BLIX Design.</description>
+            <inwork>0</inwork>
+            <include>1</include>
+            <timestamp function="true">unix_timestamp()</timestamp>
+            <userid>1</userid>
+            <filename>BLIX+Header.tpl</filename>
+        </row>
+	</table>    
+
+    <table name="stylesheet">
+        <row>
+            <name key="true">blix_stylesheet_main</name>
+            <cid key="true">{CID}</cid>
+            <description>The overall-default Style for the BLIX Layout.</description>
+            <filename>spring_flavour/style.css</filename>
+            <editorcss>blix_editor</editorcss>
+        </row>
+        <row>
+            <name key="true">blix_extension</name>
+            <cid key="true">{CID}</cid>
+            <description>BIGACE extension Styles for the BLIX Layout.</description>
+            <filename>spring_flavour/bigace_extension.css</filename>
+            <editorcss>blix_editor</editorcss>
+        </row>
+        <row>
+            <name key="true">blix_layout</name>
+            <cid key="true">{CID}</cid>
+            <description>The layout Stylesheet for BLIX.</description>
+            <filename>spring_flavour/layout.css</filename>
+            <editorcss>blix_editor</editorcss>
+        </row>
+        <row>
+            <name key="true">blix_spring_flavour</name>
+            <cid key="true">{CID}</cid>
+            <description>The spring flavour Stylesheet for BLIX.</description>
+            <filename>spring_flavour/spring_flavour.css</filename>
+            <editorcss>blix_editor</editorcss>
+        </row>
+        <row>
+            <name key="true">blix_editor</name>
+            <cid key="true">{CID}</cid>
+            <description>The FCKeditor Stylesheet for BLIX.</description>
+            <filename>spring_flavour/editor.css</filename>
+            <editorcss>blix_editor</editorcss>
+        </row>
+    </table>    
+
+    <table name="design">
+        <row>
+            <name key="true">BLIX</name>
+            <cid key="true">{CID}</cid>
+            <description>The default smarty template.</description>
+            <stylesheet>blix_stylesheet_main</stylesheet>
+            <template>BLIX</template>
+            <portlets>1</portlets>
+        </row>
+    </table>    
+
+<!-- 
+######################################################################
+#############################  REDIRECT  #############################
+######################################################################
+-->    
+
+    <table name="template">
+        <row>
+            <name key="true">REDIRECT</name>
+            <cid key="true">{CID}</cid>
+            <description>Redirects to the URL in the Menus Catchwords.</description>
+            <inwork>0</inwork>
+            <include>0</include>
+            <timestamp function="true">unix_timestamp()</timestamp>
+            <userid>1</userid>
+            <filename>REDIRECT.tpl</filename>
+            <system>0</system>
+        </row>
+    </table>    
+
+    <table name="stylesheet">
+        <row>
+            <name key="true">dummy_stylesheet</name>
+            <cid key="true">{CID}</cid>
+            <description>The dummy stylesheet for every Design that need no styles.</description>
+            <filename>css/dummy.css</filename>
+            <editorcss>dummy_stylesheet</editorcss>
+        </row>
+    </table>    
+
+    <table name="design">
+        <row>
+            <name key="true">BIGACE-REDIRECT</name>
+            <cid key="true">{CID}</cid>
+            <description>Redirects to the URL in the Menus Catchwords.</description>
+            <stylesheet>dummy_stylesheet</stylesheet>
+            <template>REDIRECT</template>
+            <portlets>0</portlets>
+        </row>
+    </table>    
+    
+</content>

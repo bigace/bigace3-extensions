@@ -1,0 +1,92 @@
+<?php
+/**
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * Copyright (C) Kevin Papst.
+ *
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * For further information visit {@link http://www.kevinpapst.de www.kevinpapst.de}.
+ *
+ * @version $Id$
+ * @author Kevin Papst
+ */
+
+import('classes.modul.ModulService');
+import('classes.modul.Modul');
+import('classes.menu.MenuService');
+
+$this->t()->load('submenuPreview', $this->MENU->getLanguageID());
+
+// fetch config
+$config = array(
+    'show_hidden'    => false,
+    'content_top'    => true,
+    'content_bottom' => false,
+    'order'          => false
+);
+$modulService = new ModulService();
+$modul = new Modul($this->MENU->getModulID());
+$config = $modulService->getModulProperties($this->MENU, $modul, $config);
+
+// Show Admin Link
+if ($modul->isModulAdmin())
+{
+    $this->adminBar()->addModuleConfigLink();
+}
+
+// display content below submenus?!?
+if($config['content_top'])
+{
+    echo $this->content()->withDefaultContent();
+}
+
+echo '<div id="preview">';
+
+$ir = new Bigace_Item_Request(_BIGACE_ITEM_MENU, $this->MENU->getID());
+$ir->setLanguageID($this->MENU->getLanguageID());
+if($config['show_hidden'])  {
+    $ir->addFlagToInclude(Bigace_Item_Request::HIDDEN);
+}
+if($config['order'])  {
+    $ir->setOrder(Bigace_Item_Request::ORDER_DESC);
+}
+
+$menus = new Bigace_Item_Walker($ir);
+
+foreach ($menus as $tmpMenu)
+{
+    $url = $this->link($tmpMenu);
+    echo '<div class="nextLevelPreview">';
+    echo '<h2><a href="'.$url.'" title="'.$tmpMenu->getName().'">';
+    echo $tmpMenu->getName();
+    echo '</a></h2><p>';
+
+    if (strlen(trim($tmpMenu->getDescription())) > 0) {
+        echo stripcslashes($tmpMenu->getDescription());
+    } else {
+        echo getTranslation('empty_description');
+    }
+
+    echo ' <a href="'.$url.'" title="'.getTranslation('list_link_title').$tmpMenu->getName().'"> &raquo;</a>';
+    echo '</p></div>';
+}
+
+echo '</div>';
+
+// display content below submenus?!?
+if($config['content_bottom'])
+{
+    echo $this->content()->withDefaultContent();
+}

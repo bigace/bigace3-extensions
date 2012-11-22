@@ -1,0 +1,59 @@
+<?php
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst 
+	@copyright Copyright (C) Kevin Papst 
+	@version $Id: edit.phtml 4 2010-07-17 14:20:17Z kevin $ */
+
+if (isset($this->ERROR) && $this->ERROR !== null)
+    echo $this->message()->error($this->ERROR);
+
+if (isset($this->INFO) && $this->INFO !== null)
+    echo $this->message()->info($this->INFO);
+	
+echo $this->backlink( $this->BACK_URL );
+
+?>
+
+<form action="<?php echo $this->EDIT_CONFIG['submit_url']; ?>" method="POST">
+<?php foreach($this->EDIT_CONFIG['hiddenValues'] as $key => $value) { ?>
+<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
+<?php } ?>
+
+<h2><?php echo $this->t("news_mode_".$this->EDIT_CONFIG['mode']); ?></h2>
+
+<label><?php echo $this->t("news_title"); ?></label>
+<?php echo $this->formText('title', $this->EDIT_CONFIG['title']); ?>
+
+<label><?php echo $this->t("news_teaser"); ?></label>
+<?php echo $this->formTextarea('teaser', $this->EDIT_CONFIG['teaser']); ?>
+
+<label><?php echo $this->t("news_categories"); ?></label>
+
+<?php echo $this->categoryChooser('categories[]', $this->NEWS_ROOT_CATEGORY, $this->NEWS_CATEGORIES, array('multiple' => true)); ?>
+<?php echo $this->t("news_new_categories"); ?>
+<br>
+<?php echo $this->formText("newCategories", $this->EDIT_CONFIG['newCategories']); ?>
+<?php echo $this->t("news_categories_split"); ?>
+
+<label><?php echo $this->t("news_image"); ?></label>
+<?php echo $this->itemChooser('imageID', array('title' => $this->t("news_choose_image")), array('remove' => true, 'itemtype' => _BIGACE_ITEM_IMAGE, 'item' => $this->EDIT_CONFIG['image'])); ?>
+
+<label><?php echo $this->t("news_content"); ?></label>
+<?php echo $this->editor("newsContent", $this->EDIT_CONFIG['content']); ?>
+
+<label><?php echo $this->t("news_date"); ?></label> 
+<?php echo $this->dateChooser('newsDate', $this->EDIT_CONFIG['newsDate'], null, null, true, array('hour_name' => 'newsDateHour', 'minute_name' => 'newsDateMinute')); ?>
+
+<?php 
+    if(isset($this->EDIT_CONFIG['meta'])) { 
+        foreach($this->EDIT_CONFIG['meta'] as $title => $metaField) {
+            echo '<label>'.$title.'</label>';
+            echo $metaField;
+        }
+    }
+?>
+
+<br/>
+<?php echo $this->saveButton('save'); ?>
+</form>
+

@@ -1,0 +1,23 @@
+<?php
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: comments.phtml 30 2011-02-04 21:12:06Z kevin $ */
+
+    $this->t()->load('comments');
+
+    echo $this->portletHeader($this->t('comment.admin.title'), array('toggle' => false));
+
+    echo '<p>';
+
+    if ($this->PENDING > 0) {
+        echo sprintf($this->t('comment_portlet_pending'), $this->PENDING, $this->ACTION_URL);
+        echo ' ';
+    }
+
+    echo sprintf($this->t('comment_portlet_status'), $this->ACTIVATED, $this->SPAM);
+
+    echo '</p>';
+    echo '<p><a href="'.$this->ACTION_URL.'">' . $this->t('show_all') . '</a></p>';
+
+    echo $this->portletFooter();

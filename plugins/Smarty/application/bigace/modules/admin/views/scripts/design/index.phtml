@@ -1,0 +1,114 @@
+<?php
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 160 2011-03-24 12:35:14Z kevin $ */
+
+if(isset($this->ERROR))
+    echo $this->message($this->ERROR, 'error');
+
+if(isset($this->INFO))
+    echo $this->message($this->INFO, 'info');
+?>
+
+<?php echo $this->portletHeader($this->t('title_existing_design'), array('full' => true)); ?>
+<table width="100%" cellspacing="0" class="nicetable">
+<col />
+<col />
+<col />
+<col />
+<col />
+<col width="130" />
+
+<thead>
+	<tr>
+		<th><?php echo $this->t('name'); ?></th>
+		<th><?php echo $this->t('description'); ?></th>
+		<th align="center"><?php echo $this->t('template'); ?></th>
+		<th align="center"><?php echo $this->t('stylesheet'); ?></th>
+		<th align="center" title="<?php echo $this->t('portlets_info'); ?>" class="tooltip"><?php echo $this->t('portlets'); ?></th>
+		<th align="center"><?php echo $this->t('action'); ?></th>
+	</tr>
+</thead>
+
+<tbody>
+    <?php foreach($this->DESIGNS AS $theRow) { ?>
+    <tr>
+        <td><a href="<?php echo $theRow['EDIT_URL']; ?>"><?php echo $theRow['DESIGN']->getName(); ?></a></td>
+        <td><?php echo $theRow['DESIGN']->getDescription(); ?></td>
+        <td align="center"><?php echo $theRow['TEMPLATE']; ?></td>
+        <td align="center"><?php echo $theRow['STYLESHEET']; ?></td>
+        <td align="center">
+            <?php if($theRow['DESIGN']->hasPortletSupport()) { ?>
+                <img src="<? echo $this->STYLE; ?>active.png" border="0" />
+            <?php } else { ?>
+                <img src="<? echo $this->STYLE; ?>inactive.png" border="0" />
+            <?php } ?>
+        </td>
+        <td align="center">
+            <?php if($theRow['ALLOW_DELETE']) { ?>
+                <?php echo $this->deleteLink($theRow['DELETE_URL'], array('onclick' => "return confirm('".$this->t("ask_delete")."')")); ?>
+            <?php } ?>
+        </td>
+    </tr>
+    <?php } ?>
+	</tbody>
+</table>
+<?php echo $this->portletFooter(); ?>
+
+<br/>
+
+<fieldset>
+<legend><?php echo $this->t('title_create_design'); ?></legend>
+    <form action="<?php echo $this->CREATE_URL; ?>" method="POST">
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <col />
+    <col />
+    <tbody>
+        <tr>
+            <td>
+                <?php echo $this->t('name'); ?>
+            </td>
+            <td>
+                <?php echo $this->formText("designName", $this->NEW_NAME); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo $this->t('description'); ?>
+            </td>
+            <td>
+                <?php echo $this->formText("description", $this->NEW_DESCRIPTION); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo $this->t('template'); ?>
+            </td>
+            <td>
+                <?php echo $this->TEMPLATE; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo $this->t('stylesheet'); ?>
+            </td>
+            <td>
+                <?php echo $this->STYLESHEET; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span title="<?php echo $this->t('portlets_info'); ?>" class="tooltip">
+                    <?php echo $this->t('portlets'); ?>
+                </span>
+            </td>
+            <td>
+                <input type="checkbox" value="1" name="portletSupport">
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    <?php echo $this->createButton('createDesign'); ?>
+    </form>
+</fieldset>

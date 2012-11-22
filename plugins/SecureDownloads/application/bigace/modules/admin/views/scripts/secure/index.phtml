@@ -1,0 +1,183 @@
+<?php
+/**
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ *
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: index.phtml 24 2010-12-14 10:57:28Z kevin $
+ */
+
+/**
+ * View script for the administration of SecureDownload files and links.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ */
+
+if (isset($this->ERROR)) {
+    echo $this->message($this->ERROR, 'error');
+}
+
+if (isset($this->INFO)) {
+    echo $this->message($this->INFO, 'info');
+}
+
+if(!isset($this->HIDE_ALL) || $this->HIDE_ALL !== true)
+{
+?>
+
+<p><?php echo $this->t('secure_info'); ?></p>
+
+<div id="tabpanes" class="ui-tabs">
+
+	<ul>
+		<li><a href="#tabpage1"><span><?php echo $this->t('title_links'); ?></span></a></li>
+		<li><a href="#tabpage2"><span><?php echo $this->t('mode_upload'); ?></span></a></li>
+	</ul>
+
+   <div id="tabpage1">
+<?
+
+    foreach($this->FILES as $file)
+    {
+        $tpd = sprintf($this->t('links_for'), $file['name'], $this->filesize( $file['size'] ));
+        echo $this->portletHeader($tpd, array('full' => true));
+
+        ?>
+        <table width="100%" class="nicetable">
+          <thead>
+            <tr>
+                <th><?php echo $this->t('secure_url'); ?></th>
+                <th width="120"><?php echo $this->t('expiry'); ?></th>
+                <th width="130" align="center"><?php echo $this->t('action'); ?></th>
+            </tr>
+          </thead>
+          <tbody>
+        <?php
+
+        if(isset($file['link']) && count($file['link']) > 0)
+        {
+            $idl = 0;
+            foreach($file['link'] as $link)
+            {
+                $idl++;
+                echo '
+                <tr>
+                    <td>
+                        '.$file['base'].$link['url'].'
+                    </td>
+                    <td>
+                        '.date('d.M.Y', $link['expiry']).'
+                    </td>
+                    <td align="center">
+                        '.$this->deleteLink($link['delete']).'
+                    </td>
+                </tr>';
+            }
+        }
+
+        $id = md5($file['name']);
+        ?>
+            <tr class="footer">
+                <td colspan="3">
+                    <a href="#add<?php echo $id; ?>" onclick="addLinksToFile('add<?php echo $id; ?>')" class="add_inline"><?php echo $this->t('add_link'); ?></a>
+                    <a href="<?php echo $file['truncate']; ?>" class="delete_inline"><?php echo $this->t('deleteall'); ?></a>
+                    <a href="<?php echo $file['delete']; ?>" class="delete_inline"><?php echo $this->t('delete_file'); ?></a>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <?php
+
+        echo $this->portletFooter();
+
+        ?>
+
+        <form action="<?php echo $this->ADD_LINKS; ?>" method="post" style="display:none" id="add<?php echo $id; ?>">
+            <input type="hidden" name="filename" value="<?php echo urlencode($file['name']); ?>" />
+            <fieldset>
+                <legend><?php echo sprintf($this->t('add_link_for'), $file['name']); ?></legend>
+                <table border="0" width="100%">
+                <tr>
+                    <td><label><?php echo $this->t('secure_url');?></label></td>
+                    <td><label><?php echo $this->t('expiry');?></label></td>
+                    <td width="130" align="center"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <?php echo $this->formText('url', '', array('id' => 'name'.$id)); ?>
+                    <?php /*
+                    <select name="amount"><?php
+                        for($i = 1; $i < 11; $i++) {
+                            echo '<option value="'.$i.'">'.$i.'</option>';
+                        }
+                    ?></select> */ ?>
+                    </td>
+                    <td>
+                        <a href="#" class="calendar" onclick="calendarMe('<?php echo $id; ?>');return false;"></a>
+                        <?php echo $this->formText('expiry', '', array('class' => 'calendar_input', 'id' => 'cal'.$id)); ?>
+                    </td>
+                    <td width="130" align="center"><?php echo $this->createButton($id);?></td>
+                </tr>
+                </table>
+            </fieldset>
+        </form>
+
+        <?php
+
+    }
+
+?>
+   </div>
+
+   <div id="tabpage2">
+
+    <?php echo '<p>'.sprintf($this->t('file_storage'), $this->FOLDER, $this->FILESIZE).'</p>'; ?>
+
+    <form enctype="multipart/form-data" action="<?php echo $this->UPLOAD_ACTION; ?>" method="post">
+    <input type="file" size="50" name="securefile" />
+    <?php echo $this->formButton('upload1', $this->t('process_upload'), array('type' => 'submit')); ?>
+    </form>
+
+   </div>
+
+</div>
+
+
+<script type="text/javascript">
+$(document).ready( function() {
+        $("#tabpanes").tabs();
+    	$(".calendar_input").datepicker({ showButtonPanel: true, minDate: new Date(), showOn: 'focus' });
+    }
+);
+
+function calendarMe(fileid)
+{
+    $("#cal"+fileid).datepicker('show');
+}
+
+function addLinksToFile(formid)
+{
+    $('#'+formid).toggle();
+}
+</script>
+<?php
+
+}
+
+?>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+ *
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * 
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, 
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * For further information visit {@link http://www.bigace.de http://www.bigace.de}.
+ *
+ * @author Kevin Papst 
+ * @copyright Copyright (C) Kevin Papst
+ * @version $Id: data.xml 290 2010-02-02 12:40:42Z bigace $
+ *
+-->
+
+<content version="1.0">
+
+    <table name="frights">
+        <row>
+            <cid key="true">{CID}</cid>
+            <name key="true">jobs</name>
+            <description>Administrate job vacancies and types.</description>
+        </row>
+    </table>  
+
+    <table name="group_frights" update="false">
+        <row>
+            <cid key="true">{CID}</cid>
+            <group_id key="true">40</group_id>
+            <fright key="true">jobs</fright>
+        </row>
+    </table>  
+        
+    <table name="jobs_type">
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <id key="true">1</id>
+            <title>Research Posts</title>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <id key="true">2</id>
+            <title>Studentships</title>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <id key="true">3</id>
+            <title>Core Support Staff</title>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <id key="true">4</id>
+            <title>Career Development Fellows</title>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <id key="true">5</id>
+            <title>Fieldworkers</title>
+        </row>
+    </table>  
+        
+</content>

@@ -1,0 +1,193 @@
+<?php
+/**
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * Copyright (C) Kevin Papst.
+ *
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * For further information visit {@link http://www.kevinpapst.de www.kevinpapst.de}.
+ *
+ * @version $Id: modul.php 2 2011-01-31 13:29:57Z kevin $
+ * @author Kevin Papst
+ *
+ * =====================================================================================
+ *
+ * This modul displays a Mail Formular, that can send an Email to a
+ * configured List of recipients.
+ *
+ * It displays a feedback message to the User when the message was sent or an error
+ * message otherwise.
+ *
+ * =====================================================================================
+ */
+
+function getOptionalFields($config)
+{
+    $optFields = (isset($config['contactMail_optional_fields']) ? $config['contactMail_optional_fields'] : '');
+    if(strlen(trim($optFields)) > 0)
+    {
+        return explode(",", trim($optFields));
+    }
+    return array();
+}
+
+import('classes.modul.ModulService');
+import('classes.modul.Modul');
+import('classes.email.TextEmail');
+
+$this->t()->load('contactMail', $this->MENU->getLanguageID());
+
+// get the email configuration
+$MENU    = $this->MENU;
+$modul   = new Modul($MENU->getModulID());
+$service = new ModulService();
+$config  = $service->getModulProperties($MENU, $modul);
+
+// Show Admin Link
+if ($modul->isModulAdmin()) {
+    $this->adminBar()->addModuleConfigLink();
+}
+
+// holds the formular values submitted by the user
+$MYMAIL = isset($_POST['mail_fields']) ? $_POST['mail_fields'] : array();
+
+$useCaptcha       = (isset($config['contactMail_use_captcha']) ? (bool)$config['contactMail_use_captcha'] : false);
+$contentBelow     = (isset($config['contactMail_content_bottom']) && ((bool)$config['contactMail_content_bottom']) === true);
+$contentTop       = (isset($config['contactMail_content_top']) && ((bool)$config['contactMail_content_top']) === true);
+$startSubject     = (isset($config['contactMail_subject']) ? $config['contactMail_subject'] : "");
+$recipient        = (isset($config['contactMail_sendto']) ? $config['contactMail_sendto'] : "");
+$emailAnswer      = (isset($config['contactMail_answer']) ? $config['contactMail_answer'] : $this->t('contact_email_sent'));
+$recipient        = explode(',', $recipient);
+
+if ($contentTop) {
+    echo $this->content()->withDefaultContent();
+}
+
+// ---------------------------------------------------
+// validate configured recipients email adress
+foreach($recipient as $recipientEmail)
+{
+    $validator = new Zend_Validate_EmailAddress();
+    //$validator->setOptions(array('domain' => false));
+    if (!$validator->isValid($recipientEmail)) {
+        echo '<p class="errors">';
+        echo $this->t('unconfigured', 'This formular is not properly configured. Please call your Administrator.');
+        echo '</p>';
+
+        foreach ($validator->getMessages() as $message) {
+            echo '<p class="errors">'.$message.'</p>';
+        }
+        return;
+    }
+}
+
+// ---------------------------------------------------
+// add additional configured fields
+$optFields   = getOptionalFields($config);
+$addOptional = array();
+if (count($optFields) > 0) {
+    foreach ($optFields AS $fieldName) {
+        if(strlen(trim($fieldName)) > 0)
+            $addOptional[$fieldName] = $fieldName;
+    }
+}
+
+// ---------------------------------------------------
+// the contact form itself
+$form = new Bigace_Form_ContactMail(array('language' => $MENU->getLanguageID()), $useCaptcha, $addOptional);
+$form->setAction(LinkHelper::itemUrl($MENU));
+
+// ---------------------------------------------------
+// START OUTPUT
+
+$showForm = true;
+$error    = null;
+
+// send email
+if (isset($_POST) && count($_POST) > 0) {
+
+    if (!$form->isValid($_POST)) {
+        $showForm = true;
+        $error = $this->t('contact_missing_values');
+    } else {
+
+        $values = $form->getValues();
+
+        // Send email to every recipient
+        foreach($recipient as $recipientEmail)
+        {
+            $email = new TextEmail();
+            $email->setCharacterSet('UTF-8');
+            $email->setTo($recipientEmail);
+            $email->setFromName($values['name']);
+            $email->setFromEmail($values['from']);
+            $email->setSubject($startSubject.$values['subject']);
+
+            $addInfos = '';
+
+            $optFields = getOptionalFields($config);
+            if (count($optFields) > 0) {
+                foreach ($optFields AS $key) {
+                    if (isset($values[$key])) {
+                        $addInfos .= "\r\n" . $key.': ' . $values[$key];
+                    }
+                }
+            }
+
+            $contentToSend  = "\r\n";
+            $contentToSend .= $this->t('contact_email_intro');
+            $contentToSend .= "\r\n\r\n";
+
+            $contentToSend .= $this->t('contact_email_name') . ' ' . $values['name'] . "\r\n";
+            $contentToSend .= $this->t('contact_email_email') . ' ' . $values['from'] . "\r\n";
+            $contentToSend .= $this->t('contact_email_date') . ' ' . $this->date(time())->withTime() . "\r\n";
+            $contentToSend .= $this->t('contact_email_url') . ' ' . LinkHelper::itemUrl($MENU) . "\r\n";
+            $contentToSend .= $this->t('contact_email_message') . ' ' . $values['message'] . "\r\n";
+
+            if (strlen($addInfos) > 0) {
+                $contentToSend .= "\r\n";
+                $contentToSend .= $addInfos;
+            }
+
+            $email->setContent($contentToSend);
+            $didMail = $email->sendMail();
+        }
+
+        echo '<div class="mailAnswer">';
+        echo '<p>';
+        if ($didMail) {
+            echo $emailAnswer;
+            $showForm = false;
+        } else {
+            $error = $this->t('contact_error_msg');
+            $showForm = true;
+        }
+        echo '</p>';
+        echo '</div>';
+    }
+}
+
+if ($showForm) {
+    if ($error !== null) {
+        echo '<p class="errors">'.$error.'</p>';
+    }
+
+    echo $form;
+    echo '<p class="required">'.$this->t('required').'</p>';
+}
+
+if ($contentBelow) {
+    echo $this->content()->withDefaultContent();
+}

@@ -1,0 +1,80 @@
+<?php
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 160 2011-03-24 12:35:14Z kevin $ */
+
+if(isset($this->ERROR))
+    echo $this->message($this->ERROR, 'error');
+
+if(isset($this->INFO))
+    echo $this->message($this->INFO, 'info');
+?>
+
+<?php echo $this->portletHeader($this->t('title_existing_stylesheet'), array('full' => true)); ?>
+<table width="100%" class="nicetable">
+<colgroup>
+    <col width="300"/>
+    <col />
+    <col width="130"/>
+</colgroup>
+<thead>
+	<tr>
+		<th><?php echo $this->t('name'); ?></th>
+		<th><?php echo $this->t('description'); ?></th>
+		<th align="center"><?php echo $this->t('action'); ?></th>
+	</tr>
+</thead>
+<tbody>
+    <?php foreach($this->STYLESHEETS as $style) { ?>
+    <tr>
+        <td valign="top">
+			<a class="edit" href="<?php echo $style['edit']; ?>"><?php echo $style['name']; ?></a>
+        </td>
+        <td><?php echo $style['description']; ?></td>
+        <td align="center">
+        <?php if($style['usage'] == 0) { ?>
+			<?php echo $this->deleteLink($style['delete'], array('onclick' => "return confirm('".$this->t("ask_delete")."')")); ?>
+        <?php } ?>
+        </td>
+    </tr>
+    <?php } ?>
+	</tbody>
+</table>
+<?php echo $this->portletFooter(); ?>
+
+<br/>
+
+<fieldset>
+<legend><?php echo $this->t('title_create_stylesheet'); ?></legend>
+<form action="<?php echo $this->CREATE_URL; ?>" method="post">
+<input type="hidden" name="mode" value="new" />
+<table class="tablesorter" cellspacing="0">
+<colgroup>
+    <col width="200"/>
+    <col />
+</colgroup>
+<tbody>
+    <tr>
+        <td><?php echo $this->t('name'); ?></td>
+        <td>
+			<?php echo $this->formText("stylesheet"); ?>
+		</td>
+    <tr>
+        <td><?php echo $this->t('description'); ?></td>
+        <td>
+			<?php echo $this->formText("description"); ?>
+		</td>
+    <tr>
+        <td><?php echo $this->t('editorcss'); ?></td>
+        <td><?php echo $this->EDITOR_CSS; ?></td>
+    <tr>
+        <td><?php echo $this->t('create'); ?></td>
+        <td>
+			<?php echo $this->createButton('createStylesheet'); ?>
+		</td>
+    </tr>
+	</tbody>
+</table>
+</form>
+</fieldset>

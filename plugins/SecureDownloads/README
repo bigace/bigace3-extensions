@@ -1,0 +1,60 @@
+##############################################################
+# README for the SecureDownload Addon
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Installation
+=================
+To install the SecureDownload extension follow these simple steps:
+
+ 1. Upload the extension using the Addon Administration panel
+ 2. Install the SecureDownload extension
+ 3. Activate the SecureDownload Plugin(!)
+
+
+Introduction 
+=================
+SecureDownloads is an extension to share files with anyone in a secure way.
+
+Every link has an expiry date which can be set manually. Default expiry date is today + 1 week.
+Each link can be used one-time, it will be deleted directly when the download is requested. 
+
+You can upload as many files as you want using the administration or you can copy them to 
+the secure download folder (see "Configuration") directly (using filesystem, FTP...). 
+
+The default process works like that:
+
+ 1. Upload a file using the SecureDownload panel
+ 2. The first download link is automatically created
+ 3. Create as many download links as you like, where you are free to use any none-existing download name
+ 3. Copy & Paste the links e.g. to an email and send the, to the person who should receive the file
+    Note: Tell them that this link works only one-time - so if they encounter a problem while downloading, 
+    you need to create a new link.
+    
+Every time the SecureDownload administration is opened or a file is downloaded, the 
+SecureDownload engine searches for expired links and files and removed them.
+
+
+Configuration
+=================
+There are some configuratiopn settings to change the default behaviour of the SecureDownload engine.
+
+The config package "secure" know the keys:
+
+ 1. days.before.removal 
+ 2. delete.files.without.links
+ 3. directory 
+
+which have the following meanings:
+
+ 1. The amount of days before a file without links will be deleted
+ 2. Whether files should be automatically removed when the last download link was used
+ 3. The directory where the secure files will be stored. Could be used e.g. to keep files
+    throughout all communities in one folder. You are encouraged to use an absolute path!
+    Default path is: /application/bigace/sites/cidX/secure/    
+
+
+Changelog
+=================
+1.1: non-adodb installer
+1.0: initial release

@@ -1,0 +1,22 @@
+######################################################################
+# INSTALLATION
+######################################################################
+
+ 1. Install this extension
+ 2. Administrate a page and assign the "fotogallery" module
+ 3. Save the page
+ 4. Create a category "Test"
+ 5. Upload some images and assign them the new category "Test"
+ 6. Open the page
+ 7. Open the "Module Administration" for this page
+ 8. Configure the category "Test" and adjust the values to your need
+ 9. Save and reload the page
+
+######################################################################
+# CHANGELOG
+######################################################################
+
+Version 2.0:
+    - Bigace 3
+    - multiple renderer: Slimbox2 and jqzoom
+    - configurable full-image size

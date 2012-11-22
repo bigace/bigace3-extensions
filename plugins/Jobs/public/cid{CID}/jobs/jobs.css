@@ -1,0 +1,22 @@
+#jobs {}
+#jobs .listing { padding: 6px 0 6px 10px; }
+#jobs .listing h3 a { font-size: 120%; font-weight: bold; }
+#jobs h2 { margin:13px 0 6px 0;padding:0px;}
+#jobs h3 { margin:5px 0 0 0;padding:0px;}
+#jobs p { margin:0px;padding:0px;}
+#jobs ul { padding:0px; margin: 0px; }
+#jobs .jobdocs a, #jobs .jobdocs a:link, #jobs .jobdocs a:visited
+{ font-size: 90%; font-weight: normal; padding-right: 10px; text-decoration:none; }
+#jobs .jobdocs a:hover { text-decoration:underline; }
+
+.pdf { background:url(../../system/images/mimetype/pdf.gif) no-repeat 0 0; padding:0 0 3px 20px;}
+.doc { background:url(../../system/images/mimetype/doc.gif) no-repeat 0 0; padding:0 0 3px 20px;}
+.odt { background:url(../../system/images/mimetype/doc.gif) no-repeat 0 0; padding:0 0 3px 20px;}
+.zip { background:url(../../system/images/mimetype/zip.gif) no-repeat 0 0; padding:0 0 3px 20px;}
+
+#job .jobdocs a, #job .jobdocs a:link, #job .jobdocs a:visited
+{ font-size: 100%; font-weight: normal; text-decoration:none; display:block; margin-left: 20px;}
+#job .jobdocs a:hover { text-decoration:underline; }
+#job .closingdate { font-weight:bold; margin: 10px 0;}
+#job .back { display:block; margin: 10px 0; }
+

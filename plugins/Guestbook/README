@@ -1,0 +1,20 @@
+##############################################################
+# README for the Guestbook module
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Version 1.9:
+------------
+- added flag to show content above guestbook entries
+- removed disclaimer flag and translation (can be added to page content)
+- migrated to Bigace 3
+
+Version 1.8:
+------------
+- translation improvements for 2.7
+
+Version 1.7:
+------------
+- using new admin styles
+- changed file structure to be compatible with BIGACE 2.6
+- fixed captcha: was not using the configured class

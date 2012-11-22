@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!--
+ *
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * 
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, 
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * For further information visit {@link http://www.bigace.de http://www.bigace.de}.
+ *
+ * @author Kevin Papst 
+ * @copyright Copyright (C) Kevin Papst
+ * @version $Id: comments_structure.xml,v 1.7 2009/02/28 00:51:32 kpapst Exp $
+ *
+-->
+<content version="1.0">
+
+    <table name="frights">
+        <row>
+            <cid key="true">{CID}</cid>
+            <name key="true">news</name>
+            <description>Allows to manage, create, edit and delete News entries.</description>
+        </row>
+        <row>
+            <cid key="true">{CID}</cid>
+            <name key="true">comments</name>
+            <description>Allows to activate, edit and manage existing  Comments.</description>
+        </row>
+    </table>    
+
+    <table name="group_frights" update="false">
+        <row>
+            <cid key="true">{CID}</cid>
+            <group_id key="true">40</group_id>
+            <fright key="true">news</fright>
+        </row>
+        <row>
+            <cid key="true">{CID}</cid>
+            <group_id key="true">40</group_id>
+            <fright key="true">comments</fright>
+        </row>
+    </table>  
+
+    <table name="configuration">
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">layout</name>
+            <value></value>
+            <type>design</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">root.id</name>
+            <value></value>
+            <type>menu_id</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">default.language</name>
+            <value></value>
+            <type>language</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">category.id</name>
+            <value></value>
+            <type>category</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">unique.name.pattern</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">unique.name.extension</name>
+            <value>.html</value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">homepage.amount</name>
+            <value>10</value>
+            <type>integer</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">homepage.archives</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">feeds.enable</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">news</package>
+            <name key="true">feeds.custom.url</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">feeds.enable</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">feeds.custom.url</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">auto.activate.unregistered</name>
+            <value>0</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">auto.activate.registered</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">allow.html</name>
+            <value>0</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">css.use.internal</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">email.required</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">email.recipient.moderator</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">email.recipient.posting</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">gravatar.enable</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">gravatar.size</name>
+            <value>48</value>
+            <type>integer</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">akismet.api.key</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">akismet.auto.activate.positive</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">akismet.auto.delete.negative</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">use.captcha</name>
+            <value>0</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">rel.nofollow</name>
+            <value>0</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">ask.for.homepage</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">comments</package>
+            <name key="true">allow.trackbacks</name>
+            <value>1</value>
+            <type>boolean</type>
+        </row>
+    </table>
+
+    <table name="comment_spam_counter">
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <counter>0</counter>
+        </row>
+    </table>  
+
+</content>

@@ -1,0 +1,148 @@
+<?php 
+/**
+ * Contents: about
+ * Widgets: sidebar
+ */
+ 
+
+$hiddenMenuID = Bigace_Config::get("vector-lover", "hidden.menu");
+$hiddenMenu = null;
+if ($hiddenMenuID !== null) {
+    $hiddenMenu = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, $hiddenMenuID, $this->MENU->getLanguageID());
+}
+ 
+$this->t()->load('bigace');
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $this->MENU->getLanguageID());
+if($topLevel === null)
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+$layout = $this->directory().'vector-lover/';
+
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+<?php echo $this->headStyle(); ?>
+<?php echo $this->headLink(); ?>
+
+<?php echo $this->headMeta(); ?>
+
+<?php echo $this->metatags($this->MENU); ?>
+
+<?php echo $this->headScript(); ?>
+
+<link rel="stylesheet" href="<?php echo $layout; ?>images/VectorLover.css" type="text/css" />
+</head>
+<body>
+<div id="wrap">
+
+	<div id="header">			
+
+		<h1 id="logo-text"><a href="<?php echo $this->link($this->topLevel);?>" title=""><?php echo $this->sitename();?></a></h1>		
+		<!-- <p id="slogan">put your site slogan here...</p>	-->
+		
+		<?php if ($hiddenMenu !== null) { ?>
+		<div id="top-menu">
+			<p>
+		    <?php echo $this->menu(
+                $hiddenMenu, 
+                array(
+                    'prefix' => '', 
+                    'suffix' => ' | ',
+                    'last' => ''                                        
+                )
+            );?></p>
+		</div>			
+		<?php } ?>
+
+	</div>
+
+	<div  id="nav">
+		<ul>
+        <?php 
+            echo '<li><a href="'.$this->link($topLevel).'"';
+            if($this->MENU->getID() == 
+                $topLevel->getID())
+                echo ' class="current"';
+            echo '>'.$topLevel->getName().'</a></li>';
+
+            echo $this->menu(
+                $topLevel, 
+                array(
+                    'prefix' => '<li>', 
+                    'suffix' => '</li>', 
+                    'selected' => 'current', 
+                    'select' => $this->MENU, 
+                    
+                )
+            );
+
+        ?>
+        </ul>
+	</div>					
+
+	<div id="content">
+	
+        <div id="main">		
+        <?php
+            echo $this->content();
+        ?>		
+		</div>
+
+		<div id="sidebar">
+            <?php
+                echo $this->content('about');
+            ?>
+
+			<h3><?php echo $this->t('search');?></h3>	
+			
+			<form id="qsearch" action="<?php echo $allLinks['search']; ?>" method="post" >
+			<p>
+			<label for="qsearch">Search:</label>
+			<input class="tbox" type="text" name="search" value="" title="" />
+			<input type="hidden" name="language" value="<?php echo $this->MENU->getLanguageID(); ?>" />
+			<input class="btn" value="<?php echo $this->t('search_button'); ?>" alt="<?php echo $this->t('search');?>" type="image" name="searchsubmit" title="Search" src="<?php echo $layout; ?>images/search.gif" />
+			</p>
+			</form>		
+
+			<?php 
+              $widgets = $this->widgets($this->MENU);
+              foreach($widgets as $widget) {
+                echo '<h3>' . $widget->getTitle() . '</h3>';
+                echo $widget->getHtml();
+              }
+            ?>
+		</div>		
+		
+	</div>
+		
+	<div id="footer">
+	    <p>
+	    &copy; Copyright <?php echo date('Y', time()); ?>
+        <?php echo Bigace_Config::get("community", "copyright.holder", "BIGACE CMS"); ?>.
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Template by <a href="http://www.styleshout.com/">styleshout</a> |
+		<?php echo $this->copyright();?>
+   		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php 
+            echo '<a href="'.$this->link($topLevel).'">'.$topLevel->getName().'</a>';
+            
+		    if ($hiddenMenu !== null) {
+		        echo $this->menu(
+                    $hiddenMenu, 
+                    array(
+                        'prefix' => ' | ', 
+                        'suffix' => '',                                        
+                    )
+                );
+	   	    } 
+   	    ?>
+   		</p>			
+	
+	</div>
+
+</div>
+
+</body>
+</html>

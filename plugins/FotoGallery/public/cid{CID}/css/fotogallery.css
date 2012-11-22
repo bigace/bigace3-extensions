@@ -1,0 +1,17 @@
+.gallery-slimbox a, .gallery-slimbox a:hover { border:0px; text-decoration:none; }
+.gallery-slimbox img { border:0px; }
+.gallery-slimbox .thumbnail{ padding: 7px; border: 1px solid #ddd; float: left; margin-right: 10px; margin-bottom: 15px; }
+.gallery-slimbox a.thumnailLink{ font-weight: bold; text-decoration: none; border:0px; display:block; color: #8ab459; }
+.gallery-slimbox a.thumnailLink:hover{ font-weight: bold; text-decoration: none; display:block; color: orange; }
+
+.gallery-jqzoom .thumbnail { display:block; clear:left; }
+.gallery-jqzoom .gallery-title { 
+    clear:left;
+    font-size: 18px;
+    height: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+    z-index: 1;
+    
+}
+.gallery-jqzoom .gallery-description { display:block; clear:left; }

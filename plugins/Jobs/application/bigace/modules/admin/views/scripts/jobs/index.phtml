@@ -1,0 +1,130 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR);
+
+if(isset($this->INFO))
+    echo $this->message()->info($this->INFO);
+
+?>
+
+<p>
+    <a href="<?php echo $this->ACTION_NEW; ?>"><?php echo $this->t('create_job'); ?></a>
+    |
+    <a href="<?php echo $this->ACTION_JOBTYPES; ?>"><?php echo $this->t('admin_jobtypes'); ?></a>
+</p>
+
+<div id="tabpanes" class="ui-tabs">
+
+	<ul>
+		<li><a href="#tabpage1"><span><?php echo $this->t('open_legend'); ?></span></a></li>
+		<li><a href="#tabpage2"><span><?php echo $this->t('closed_legend'); ?></span></a></li>
+	</ul>
+
+   <div id="tabpage1">	
+    <?php
+    echo $this->portletHeader($this->t('open_jobs_portlet'), array('full' => true));
+    ?>
+
+    <table width="100%" class="nicetable">
+      <thead>
+        <tr>
+            <th><?php echo $this->t('name'); ?></th>
+            <th width="170"><?php echo $this->t('type'); ?></th>
+            <th width="150"><?php echo $this->t('valid_to'); ?></th>
+            <th width="200" align="center"><?php echo $this->t('action'); ?></th>
+        </tr>
+      </thead>
+      <tbody>
+    <?php    
+
+        foreach($this->ALL_OPEN as $entry)
+        {
+            echo '
+            <tr>
+                <td>
+                    <a href="'.$entry['edit'].'">'.$entry['name'].'</a>
+                </td>
+                <td>
+                    '.$entry['type'].'
+                </td>
+                <td>
+                    '.date('d.M Y', intval($entry['valid_to'])).'
+                </td>
+                <td align="center">
+                    '.$this->editLink($entry['edit']).'
+                    '.$this->deleteLink($entry['delete']).'
+                </td>
+            </tr>';
+        }
+            
+    ?>
+      </tbody>
+    </table>
+
+    <?php
+    echo $this->portletFooter();
+    ?>
+   </div>
+
+   <div id="tabpage2">	
+    <?
+    echo $this->portletHeader($this->t('closed_jobs_portlet'), array('full' => true));
+    ?>
+
+    <table width="100%" class="nicetable">
+      <thead>
+        <tr>
+            <th><?php echo $this->t('name'); ?></th>
+            <th width="170"><?php echo $this->t('type'); ?></th>
+            <th width="150"><?php echo $this->t('valid_to'); ?></th>
+            <th width="200" align="center"><?php echo $this->t('action'); ?></th>
+        </tr>
+      </thead>
+      <tbody>
+    <?php    
+
+        foreach($this->ALL_CLOSED as $entry)
+        {
+            echo '
+            <tr>
+                <td>
+                    <a href="'.$entry['edit'].'">'.$entry['name'].'</a>
+                </td>
+                <td>
+                    '.$entry['type'].'
+                </td>
+                <td>
+                    '.date('d.M Y', $entry['valid_to']).'
+                </td>
+                <td align="center">
+                    '.$this->editLink($entry['edit']).'
+                    '.$this->deleteLink($entry['delete']).'
+                </td>
+            </tr>';
+        }
+            
+    ?>
+      </tbody>
+    </table>
+
+    <?php
+    echo $this->portletFooter();
+    ?>
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+$(document).ready( function() { 
+    $("#tabpanes").tabs();
+	<?php if($this->ACTIVE_TAB == "closed") { ?>
+		$("#tabpanes").tabs("select", 'tabpage2');
+	<?php } ?>    
+});
+</script>

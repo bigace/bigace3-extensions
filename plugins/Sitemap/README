@@ -1,0 +1,22 @@
+##############################################################
+# README for the Sitemap module
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Installation
+=================
+To install the "Sitemap" extension follow these simple steps:
+
+ 1. Upload the extension using the Administration panel
+ 2. Install the "Sitemap" extension
+ 3. Assign the "Sitemap" module to the page where you want the sitemap to appear 
+
+Introduction 
+=================
+Sitemap displays all pages within your website.
+
+Changelog
+=================
+1.4: 
+    - Initial release for Bigace 3
+    - Added flag to display content above sitemap

@@ -1,0 +1,105 @@
+<?php
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst
+	@copyright Copyright (C) Kevin Papst
+	@version $Id: index.phtml 193 2011-04-11 09:30:02Z kevin $ */
+
+if(isset($this->INFO))
+    echo $this->message()->info($this->INFO);
+
+if(isset($this->ERROR))
+    echo $this->message()->error($this->ERROR);
+
+if(count($this->COMMENTS) == 0)
+{
+    echo $this->message()->info($this->t("error_no_comments"));
+}
+else
+{
+    ?>
+    <script type="text/javascript">
+        function changePage(amount, page)
+        {
+            $('#limitFrom').val(page);
+            $('#limitTo').val(amount);
+            $('#commentPage').submit();
+        }
+    </script>
+    <form id="commentPage" action="<?php echo $this->LISTING_URL; ?>" method="POST">
+        <input type="hidden" id="limitFrom" name="limitFrom" value="<?php echo $this->LIMIT_FROM; ?>" />
+        <input type="hidden" id="limitTo" name="limitTo" value="<?php echo $this->LIMIT_TO; ?>" />
+    </form>
+    <?php
+    echo $this->paginationControl($this->PAGINATOR, 'Sliding', 'paginator.phtml');
+
+    echo $this->portletHeader($this->TITLE, array('full' => true));
+    ?>
+     <table width="100%" class="nicetable">
+     <col width="120" />
+     <col width="90" />
+    <?php if ($this->PERM_ACTIVATE === false && $this->PERM_DELETE === false) { ?>
+     <col />
+    <?php } else if ($this->PERM_ACTIVATE && $this->PERM_DELETE) { ?>
+     <col />
+     <col width="220" />
+    <?php } else { ?>
+     <col />
+     <col width="160" />
+    <?php } ?>
+     <thead>
+	    <tr>
+	        <th align="left"><?php echo $this->t("name"); ?></th>
+		    <th><?php echo $this->t("comment_date"); ?></th>
+		    <th><?php echo $this->t("comment_text"); ?></th>
+            <?php if ($this->PERM_ACTIVATE || $this->PERM_DELETE) { ?>
+        	<th align="center"><?php echo $this->t("action"); ?></th>
+            <?php } ?>
+        </tr>
+     </thead>
+     <tbody>
+      <?php foreach($this->COMMENTS as $comment) { ?>
+        <tr>
+            <td valign="top">
+                <?php if ($this->PERM_EDIT) { ?>
+                    <a href="<?php echo $comment['edit']; ?>"><?php echo $comment['name']; ?></a>
+                <?php } else { ?>
+                    <?php echo $comment['name']; ?>
+                <?php } ?>
+                <br/>
+
+                <?php if($comment['anonymous']){ ?>
+                    <img src="<?php echo $this->STYLE; ?>user_inactive.png" alt="<?php echo $comment['ip']; ?>" class="tooltip" title="<?php echo $comment['ip']; ?>" />
+                <?php } else { ?>
+                    <img src="<?php echo $this->STYLE; ?>user_active.png" alt="<?php echo $comment['ip']; ?>" class="tooltip" title="<?php echo $comment['ip']; ?>" />
+                <?php } ?>
+
+                <?php if ($comment['homepage'] != '') { ?>
+                    <a href="<?php echo $comment['homepage']; ?>" target="_blank"><img src="<?php echo $this->STYLE; ?>homepage.png" class="tooltip" title="<?php echo $comment['homepage']; ?>" /></a>
+                <?php } ?>
+
+                <?php if ($comment['email'] != '') { ?>
+                    <a href="mailto:<?php echo $comment['email']; ?>"><img src="<?php echo $this->STYLE; ?>mail.png" class="tooltip" title="<?php echo $comment['email']; ?>" /></a>
+                <?php } ?>
+	        </td>
+	        <td valign="top"><?php echo $this->date($comment['timestamp']); /*|date_format:"%m.%d.%y %H:%M"*/ ?></td>
+	        <td><?php echo nl2br($comment['comment']); ?></td>
+            <?php if ($this->PERM_ACTIVATE || $this->PERM_DELETE) { ?>
+	        <td align="center" valign="top">
+                <?php if ($this->PERM_ACTIVATE) { ?>
+    	            <?php echo $this->approveLink($comment['activate']); ?>
+                <?php } ?>
+                <?php if ($this->PERM_DELETE) { ?>
+    	            <?php echo $this->deleteLink($comment['delete']); ?>
+    	            <?php echo $this->deleteLink($comment['spam'], array('text' => $this->t("comment_spam_delete"))); ?>
+                <?php } ?>
+	        </td>
+            <?php } ?>
+        </tr>
+      <?php } ?>
+     </tbody>
+     </table>
+    <?php
+    echo $this->portletFooter();
+
+}
+?>

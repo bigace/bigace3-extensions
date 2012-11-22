@@ -1,0 +1,104 @@
+<?php
+/*
+* Displays a language dependend Sitemap with configurable amount of levels.
+*
+* Copyright (C) Kevin Papst.
+*
+* For further information go to http://www.bigace.de/
+*
+* @version $Id: modul.phtml 193 2011-04-11 09:30:02Z kevin $
+* @author Kevin Papst
+* @package bigace.modul
+*/
+
+import('classes.modul.ModulService');
+import('classes.modul.Modul');
+
+$MENU    = $this->MENU;
+$modul   = new Modul($MENU->getModulID());
+$service = new ModulService();
+$config  = $service->getModulProperties($MENU, $modul);
+
+// Show Admin Link
+if ($modul->isModulAdmin())
+{
+    $this->adminBar()->addModuleConfigLink();
+}
+
+$startID 	 = $config['sitemap_startID'];
+$depth 		 = $config['sitemap_menuDepth'];
+$useCss      = $config['sitemap_useCss'];
+$hidden      = $config['sitemap_showHidden'];
+$hiddenLinks = $config['sitemap_linkHidden'];
+$showCntTop  = $config['sitemap_content_top'];
+
+function createMenuRecurse($startMenu, $level, $max, $hidden, $hiddenLinks)
+{
+	if ($level < $max) {
+    	$req = new Bigace_Item_Request(_BIGACE_ITEM_MENU, $startMenu->getID());
+    	$req->setLanguageID($startMenu->getLanguageID())
+    	    ->setTreetype(ITEM_LOAD_LIGHT);
+    	if ($hidden) {
+        	$req->addFlagToInclude(Bigace_Item_Request::HIDDEN);
+    	}
+        $walker = new Bigace_Item_Walker($req);
+
+		if ($walker->count() > 0) {
+			echo '<ul>';
+			foreach ($walker as $tempMenu) {
+				echo '<li>';
+
+			    if (!$tempMenu->isHidden() || $hiddenLinks) {
+    				echo '<a title="' . $tempMenu->getName() . '" href="'.
+    				    LinkHelper::itemUrl($tempMenu).'">' . $tempMenu->getName() . "</a>\n";
+			    } else {
+    				echo $tempMenu->getName() . "\n";
+			    }
+
+                createMenuRecurse($tempMenu, $level+1, $max, $hidden, $hiddenLinks);
+
+                echo '</li>' . "\n";
+			}
+			echo '</ul>';
+		}
+	}
+}
+
+// include a default stylesheet
+if ($useCss)
+{
+    $this->headLink()->appendStylesheet($this->directory().'?>/sitemap.css');
+}
+
+// show page content on top
+if ($showCntTop)
+{
+    echo $this->content()->withDefaultContent();
+}
+?>
+
+<div id="sitemap">
+	<?php
+    	$req = new Bigace_Item_Request(_BIGACE_ITEM_MENU, $startID);
+    	$req->setLanguageID($MENU->getLanguageID())
+    	    ->setTreetype(ITEM_LOAD_LIGHT);
+    	if ($hidden) {
+        	$req->addFlagToInclude(Bigace_Item_Request::HIDDEN);
+    	}
+        $walker = new Bigace_Item_Walker($req);
+
+		foreach ($walker as $tempMenu1) {
+
+			echo '<h2>';
+		    if (!$tempMenu1->isHidden() || $hiddenLinks) {
+    			echo '<a title="'.$tempMenu1->getName().'" href="'.
+    			 LinkHelper::itemUrl($tempMenu1).'">'.$tempMenu1->getName().'</a>';
+		    } else {
+    			echo $tempMenu1->getName();
+    	    }
+			echo '</h2>' . "\n";
+
+			createMenuRecurse($tempMenu1, 1, $depth, $hidden, $hiddenLinks);
+		}
+	?>
+</div>

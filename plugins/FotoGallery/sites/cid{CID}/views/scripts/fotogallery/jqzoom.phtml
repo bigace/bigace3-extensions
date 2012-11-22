@@ -1,0 +1,83 @@
+<?php
+/**
+ * jQZoom EVolution renderer.
+ *
+ * Copyright (C) Kevin Papst
+ *
+ * @version $Id$
+ * @author Kevin Papst
+ */
+
+$config = $this->config;
+$images = $this->images;
+
+$thumbOptions = array();
+if (!empty($config['thumb_height_px']) && $config['thumb_height_px'] > 0) {
+    $thumbOptions['height'] = $config['thumb_height_px'];
+}
+
+if (!empty($config['thumb_width_px']) && $config['thumb_width_px'] > 0) {
+    $thumbOptions['width'] = $config['thumb_width_px'];
+}
+
+$fullOptions = array();
+if (!empty($config['full_height_px']) && is_numeric($config['full_height_px']) && $config['full_height_px'] > 0) {
+    $fullOptions['height'] = $config['full_height_px'];
+}
+
+if (!empty($config['full_width_px']) && is_numeric($config['full_width_px']) && $config['full_width_px'] > 0) {
+    $fullOptions['width'] = $config['full_width_px'];
+}
+
+$jqzoom = $this->directory('public') . 'fotogallery/jqzoom/';
+
+$this->headLink()->appendStylesheet($jqzoom.'css/jquery.jqzoom.css');
+$this->headScript()->appendFile($jqzoom.'js/jquery.jqzoom-core.js');
+
+?>
+<dl>
+<?php
+
+foreach ($images AS $image) {
+    $imgLink  = $this->link($image);
+    $thumbUrl = $this->thumbnail($image, $thumbOptions);
+
+    if ($config['show_name']) {
+        echo'<dt class="gallery-title">' . $image->getName() . '</dt>';
+    }
+
+    ?>
+    <dt class="gallery-image">
+        <div class="gallery-thumbnail">
+            <a href="<?php echo $imgLink; ?>" class="jqZoomMe" title="<?php echo $image->getName(); ?>">
+                <img src="<?php echo $thumbUrl; ?>"
+                    alt="<?php echo $image->getName(); ?>"
+                    title="<?php echo $image->getName(); ?>">
+            </a>
+        </div>
+    </dt>
+    <?php
+    if ($config['show_description']) {
+        echo '<dd class="gallery-caption">'.$image->getDescription().'</dd>';
+    }
+}
+
+?>
+</dl>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.jqZoomMe').jqzoom({
+        <?php
+        if (isset($fullOptions['width'])) {
+            echo "zoomWidth: ".$fullOptions['width'].",\n";
+        }
+        if (isset($fullOptions['height'])) {
+            echo "zoomHeight: ".$fullOptions['height'].",\n";
+        }
+        ?>
+        xOffset: 30,
+        preloadText: '<?php echo $this->t('gallery_loading_image'); ?>'
+    });
+});
+</script>

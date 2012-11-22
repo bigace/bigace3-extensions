@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License 
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ * 
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: data.xml 306 2010-02-04 19:04:44Z bigace $
+-->
+<content version="1.0">
+
+    <table name="frights">
+        <row>
+            <cid key="true">{CID}</cid>
+            <name key="true">securedownload</name>
+            <description>Administrate secure downloads.</description>
+        </row>
+    </table>  
+
+    <table name="group_frights" update="false">
+        <row>
+            <cid key="true">{CID}</cid>
+            <group_id key="true">40</group_id>
+            <fright key="true">securedownload</fright>
+        </row>
+    </table>  
+        
+    <table name="configuration">
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">secure</package>
+            <name key="true">directory</name>
+            <value></value>
+            <type>string</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">secure</package>
+            <name key="true">days.before.removal</name>
+            <value>7</value>
+            <type>integer</type>
+        </row>
+        <row update="false">
+            <cid key="true">{CID}</cid>
+            <package key="true">secure</package>
+            <name key="true">delete.files.without.links</name>
+            <value>TRUE</value>
+            <type>boolean</type>
+            <extended></extended>
+        </row>
+    </table>
+
+</content>

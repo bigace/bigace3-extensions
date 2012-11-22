@@ -1,0 +1,151 @@
+<?php
+/**
+ * Contents:
+ * Widgets: sidebar
+ */
+
+
+$hiddenMenuID = Bigace_Config::get("business", "hidden.menu");
+$hiddenMenu = null;
+if ($hiddenMenuID !== null) {
+    $hiddenMenu = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, $hiddenMenuID, $this->MENU->getLanguageID());
+}
+
+$this->t()->load('bigace');
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $this->MENU->getLanguageID());
+if($topLevel === null)
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+$layout = $this->directory().'business/';
+
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Business 2007</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $layout; ?>css/style.css" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+</head>
+
+<body>
+<div id="container">
+        <div id="holder" class="clearfix">
+                <div id="logo">
+                        <h1><?php echo $this->sitename();?></h1>
+          </div>
+                <div id="navigation">
+                        <ul>
+                               <?php
+            echo '<li><a href="'.$this->link($topLevel).'"';
+            if($this->MENU->getID() ==
+                $topLevel->getID())
+                echo ' class="current"';
+            echo '>'.$topLevel->getName().'</a></li>';
+
+            echo $this->menu(
+                $topLevel,
+                array(
+                    'prefix' => '<li>',
+                    'suffix' => '</li>',
+                    'selected' => 'current',
+                    'select' => $this->MENU,
+
+                )
+            );
+
+        ?>
+                        </ul>
+            </div>
+                <div id="header"></div>
+                <div id="content">
+                 <?php
+$breadcrumbs = $this->wayHome($this->MENU, true);
+$amount = count($breadcrumbs);
+
+if($amount > 0)
+{
+    ?>
+    <ul id="breadcrumbs">
+    <?php
+        $i = 0;
+        foreach ($breadcrumbs as $id => $item) {
+                echo '&raquo;<li';
+                if($i == 0) echo ' class="first"';
+                if($i == $amount-1) echo ' class="last"';
+                echo '><a href="'.$this->link($item).'">'.$item->getName().'</a></li> ';
+                $i++;
+        }
+    ?>
+    </ul>
+    <?php
+}
+?>
+
+
+                       <?php
+            echo $this->content();
+        ?>
+                </div>
+                <div id="news">
+
+                <div class="newsItem">
+                <form id="qsearch" action="<?php echo $allLinks['search']; ?>" method="post" >
+
+
+                        <input class="tbox" type="text" name="search" value="" title="" size="17"/>
+                        <input type="hidden" name="language" value="<?php echo $this->MENU->getLanguageID(); ?>" />
+                        <button class="button" type="submit" id="createButton" name="createButton"><?php echo $this->t('search'); ?></button>
+
+                        </form>
+
+                </div>
+
+                <div class="newsItem">
+                      <?php
+              $widgets = $this->widgets($this->MENU);
+              foreach($widgets as $widget) {
+                echo '<h1>' . $widget->getTitle() . '</h1>';
+                echo $widget->getHtml();
+              }
+            ?>
+            </div>
+          </div>
+        </div>
+        <div id="footer">
+                <span id="copyright">&copy; Copyright <?php echo date('Y', time()); ?>
+                        <a href="http://www.bigace.de">BIGACE CMS</a> | Design by <a href="http://www.sitecreative.net" target="_blank">SiteCreative</a></span>
+                <ul>
+                      <?php
+// load most important links that we will use within the template
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+
+    if (isset($allLinks['login'])) {
+    // nicht angemeldet
+    echo '<li><a target="_blank" href="'.$allLinks['login'].'">Login</a></li>';
+    ?>
+
+
+
+            <?php
+        } else {
+            if (isset($allLinks['admin'])) {
+                echo '<li><a target="_blank" href="'.$allLinks['admin'].'"> Administration </a></li>';
+        }
+            if (isset($allLinks['editor'])) {
+                echo '<li><a target="_blank" href="'.$allLinks['editor'].'"> Edit </a></li>';
+        }
+            if (isset($allLinks['logout'])) {
+              echo '<li><a href="'.$allLinks['logout'].'"> Logout</a></li>';
+     }
+    }
+
+    ?>
+                </ul>
+        </div>
+</div>
+</body>
+</html>

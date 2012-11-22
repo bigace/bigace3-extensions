@@ -1,0 +1,97 @@
+/*defaults*/
+body         {background:#2765AF url('../images/body_bg.jpg') repeat-x 0 0; color:#000000; margin:20px 0; padding:0; font-family:"Trebuchet MS", verdana, arial, "Times New Roman", serif; font-size:90%; }
+p                {margin:0; padding:0 0 15px 0; }
+a                {color:#000000; text-decoration:underline; }
+a:hover        {color:#225799; text-decoration:none;}
+
+
+/*structural elements*/
+#container        {margin:0px auto; text-align:center; width:760px; }
+#holder                {width:100%; padding:20px 20px 5px 20px; background:#FFFFFF; text-align:left; }
+#logo                {background:none; border-bottom:1px solid #DADADA; padding:5px 30px 20px 0px; }
+#navigation        {padding:10px 0; }
+#header                {background:#DADADA url('../images/header_home.jpg') no-repeat 10px 10px; padding:10px; height:200px; }
+#content        {float:left; width:490px; padding:20px 10px 0 0; line-height:160%; }
+#news                {float:right; width:250px; padding:20px 0; line-height:140%; text-align:justify; }
+.newsItem        {padding:20px 20px 5px 20px; background:#FEFFD5; border:1px solid #FFEB70; font-size:90%; margin-bottom:20px; }
+#footer                {clear:both; width:100%; font-size:80%; background:#DADADA; padding:20px; text-align:left; border-top:2px solid #2765AF; }
+#copyright        {float:right; }
+
+
+/*headings*/
+.newsItem h1        {color:#225799; margin:0 0 10px 0; padding:0; font-size:130%; font-weight:normal; }
+#content h1                {font-size:170%; font-weight:normal; line-height:130%; margin:0; padding:0 0 20px 0; }
+#logo h1                {font-weight:normal; font-size:170%; margin:0; padding:0; color:#225799; }
+
+
+/*navigation*/
+#navigation ul                 {margin:0; padding:0; }
+#navigation li                 {margin:0; padding:0; list-style:none; display:inline; }
+#navigation a                {color:#225799; padding:0 20px 0 0; text-decoration:none; }
+#navigation a:hover        {color:#000000; }
+
+#footer ul                 {margin:0; padding:0; }
+#footer li                 {margin:0; padding:0; list-style:none; display:inline; }
+#footer a                {color:#000000; font-weight:bold; padding:0 5px 0 0; text-decoration:underline; }
+#footer a:hover        {color:#000000; text-decoration:none; }
+
+
+/*shamelessly borrowed styles from http://www.positioniseverything.net/easyclearing.html*/
+.clearfix:after {content:"."; display:block; height:0; clear:both; visibility:hidden; }
+.clearfix {display:inline-block; }
+/* Hides from IE-mac \*/
+* html .clearfix {height:1%; }
+.clearfix {display:block; }
+/* End hide from IE-mac */
+
+
+/* Sidebar */
+
+.newsItem ul {margin:0 0 20px -35px}
+.newsItem ul li {list-style-type:none;border-bottom:1px solid #000;padding:7px 0 7px 0}
+.newsItem ul li a {text-decoration:none;}
+ul li a img {margin:0 8px -2px 0;padding:0;background:none;border:none;}
+.newsItem ul li:last-child {border:none;}
+.newsItem li ul li:last-child {border:none;}
+.newsItem ul.navigationPortlet li ul:first-child {border:none;}
+
+
+
+/* News */
+
+img.newsImage {margin-right:10px;}
+
+/* Comments */
+
+.header {background-color:#115280;color:#fff;font-weight:bold;padding:5px 10px;margin-bottom:15px;}
+.header a {color:#C4DE8F;}
+.gravatar {margin-right:10px;float:left;}
+#createButton {background-color:#225799;
+                 border:medium none;
+                 color:#FFFFFF;
+                 font-weight:bold;
+                 padding:2px 9px;
+}
+#commentform dt {padding:15px 0 10px 0;}
+#commentform dd {margin:0;}
+#commentform textarea {height:170px;width:300px;}
+#captcha-input {margin:0;}
+
+/* Search */
+#searchForm  {padding:0 10px 20px 10px;background-color:#FEFFD5;border:1px solid #FFEB70;}
+.searchTable {border:none;}
+.searchTable tr {border:none;}
+.searchTable td{border:none;}
+.searchTable td button {background-color:#225799;
+                 border:medium none;
+                 color:#FFFFFF;
+                 font-weight:bold;
+                 padding:2px 9px;}
+.tbox {margin:0 0 10px 0;}
+.searchTable td button:hover {cursor:pointer;}
+
+button {cursor:pointer;}
+button:hover {cursor:pointer;}
+
+#breadcrumbs {margin:5px 0 20px 0;}
+#breadcrumbs li {display:inline;margin:0 5px 0 5px}

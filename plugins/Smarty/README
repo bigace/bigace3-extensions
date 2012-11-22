@@ -1,0 +1,32 @@
+##############################################################
+# README for the Smarty Addon
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Installation
+=================
+To install the "Smarty Template Engine" extension follow these simple steps:
+
+ 1. Upload the extension using the Addon Administration
+ 2. Install the Smarty extension
+ 3. Activate the Smarty Plugin(!)
+
+ATTENTION: Installing the Smarty extension, changes your default layout!
+This is done to prevent white pages, when the default layout cannot be found.
+
+Introduction 
+=============
+Smarty is an extension that allows to use the Smarty template engine as 
+replacement for Zend_View.
+
+This is especially interesting for people migrating from a previous Bigace 2.x 
+version and for all who want to be able to edit templates/stylesheets through 
+the administration.
+
+Configuration/Permissions
+==========================
+Access to Smarty administration is the same as for designs: "layout".
+ 
+Changelog
+=================
+1.0: initial release for Bigace 3

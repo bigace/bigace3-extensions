@@ -1,0 +1,94 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: edit.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+   
+if(isset($this->ERROR)) 
+    echo $this->message($this->ERROR, 'error');
+    
+if(isset($this->INFO)) 
+    echo $this->message($this->INFO, 'info');
+
+echo $this->backlink($this->BACK_URL);   
+   
+?>
+
+
+
+
+    <?php echo $this->portletHeader($this->DESIGN->getName()); ?>
+
+    <form action="<?php echo $this->SAVE_URL; ?>" method="post">
+    <input type="hidden" name="designName" value="<?php echo urlencode($this->DESIGN->getName()); ?>">
+
+    <table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <col width="150px" />
+    <col />
+    <tr>
+        <td>
+            <?php echo $this->t('description'); ?>
+        </td>
+        <td>
+            <?php echo $this->formText("description", $this->DESCRIPTION); ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $this->t('template'); ?>
+        </td>
+        <td>
+            <?php echo $this->TEMPLATE_SELECT; ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $this->t('stylesheet'); ?>
+        </td>
+        <td>
+            <?php echo $this->STYLESHEET_SELECT; ?>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?php echo $this->t('portlets'); ?>
+        </td>
+        <td>
+            <label><input type="checkbox" value="1" name="portletSupport" <?php echo $this->PORTLET_SUPPORT; ?>>
+            <?php echo $this->t('portlets_info'); ?></label>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?php echo $this->t('portletColumns'); ?>
+        </td>
+        <td>
+            <?php echo $this->formText("portletColumns", $this->PORTLETS); ?>
+            <br />
+            <i><?php echo $this->t('comma_separated'); ?></i>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?php echo $this->t('contents'); ?>
+        </td>
+        <td>
+            <?php echo $this->formText("contents", $this->CONTENTS); ?>
+            <br />
+            <?php echo $this->t('contents_info'); ?>
+            <br />
+            <i><?php echo $this->t('comma_separated'); ?></i>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="left">
+            <?php echo $this->saveButton('saveDesign'); ?>
+        </td>
+    </tr>
+    </table>
+
+    </form>
+
+    <?php echo $this->portletFooter(); ?>    
+    
+

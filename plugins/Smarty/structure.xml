@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License 
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ * 
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: structure.xml 306 2010-02-04 19:04:44Z bigace $
+-->
+<bigace version="3.0">
+
+  <table name="design">
+    <description>This table holds all choosable designs.</description>
+    <create>
+		`name` varchar(255) NOT NULL,
+		`cid` int(11) NOT NULL,
+		`description` text,
+		`stylesheet` varchar(255) default '',
+		`template` varchar(255) NOT NULL,
+		`portlets` tinyint(4) NOT NULL default '0',
+		PRIMARY KEY  (`name`,`cid`)
+    </create>
+  </table>
+
+  <table name="design_contents">
+    <description>This table holds information about design-content mappings.</description>
+    <create>
+		`cid` int(11) NOT NULL,
+		`design` varchar(100) NOT NULL,
+		`name` varchar(100) NOT NULL,
+		PRIMARY KEY  (`cid`,`design`,`name`),
+		KEY `design_contents_mapping` (`cid`,`design`)
+    </create>
+  </table>
+
+  <table name="design_portlets">
+    <description>This table holds information about design-portlet mappings.</description>
+    <create>
+		`cid` int(11) NOT NULL,
+		`design` varchar(100) NOT NULL,
+		`name` varchar(100) NOT NULL,
+		PRIMARY KEY  (`cid`,`design`,`name`),
+		KEY `design_portlets_mapping` (`cid`,`design`)
+    </create>
+  </table>
+
+  <table name="smarty_history">
+    <description>This table holds historical versions of Smarty Elements.</description>
+    <create>
+		`type` varchar(20) NOT NULL,
+		`name` varchar(255) NOT NULL,
+		`cid` int(11) NOT NULL,
+		`timestamp` int(11) NOT NULL,
+		`userid` int(11) NOT NULL,
+		`content` text,
+		PRIMARY KEY  (`type`,`name`,`cid`,`timestamp`)
+    </create>
+  </table>
+
+  <table name="stylesheet">
+    <description>This table holds all Stylesheets for the Smarty Templates.</description>
+    <create>
+		`name` varchar(255) NOT NULL,
+		`cid` int(11) NOT NULL,
+		`description` text,
+		`filename` varchar(255) NOT NULL,
+		`editorcss` varchar(255) NOT NULL,
+		PRIMARY KEY  (`name`,`cid`),
+		UNIQUE KEY `stylesheet_filename` (`filename`,`cid`)
+    </create>
+  </table>
+
+  <table name="template">
+    <description>This table holds all Smarty Templates.</description>
+    <create>
+		`name` varchar(255) NOT NULL,
+		`cid` int(11) NOT NULL,
+		`description` text,
+		`inwork` tinyint(4) NOT NULL default '1',
+		`include` tinyint(4) NOT NULL default '1',
+		`timestamp` int(11) NOT NULL,
+		`userid` int(11) NOT NULL,
+		`filename` varchar(255) NOT NULL,
+		`system` tinyint(4) NOT NULL default '0',
+		PRIMARY KEY  (`name`,`cid`),
+		UNIQUE KEY `template_filename` (`filename`,`cid`)
+    </create>
+  </table>
+
+</bigace>

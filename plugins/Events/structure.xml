@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+ *
+ * BIGACE - a PHP and MySQL based Web CMS.
+ * 
+ * BIGACE is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BIGACE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, 
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * For further information visit {@link http://www.bigace.de http://www.bigace.de}.
+ *
+ * @author Kevin Papst 
+ * @copyright Copyright (C) Kevin Papst
+ * @version $Id: structure.xml 290 2010-02-02 12:40:42Z bigace $
+ *
+-->
+
+<bigace version="3.0">
+
+  <table name="events">
+    <description>This table holds the events data.</description>
+    <create>
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `cid` int(11) NOT NULL,
+        `title` varchar(255) NOT NULL,
+        `artist` varchar(255) NOT NULL,
+        `type` varchar(50) NOT NULL,
+        `description` text NOT NULL,
+        `details` text NOT NULL,
+        `location` text NOT NULL,
+        `startdate` int(11) NOT NULL DEFAULT '0',        
+        `enddate` int(11) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`,`cid`)
+    </create>
+  </table>
+  
+</bigace>

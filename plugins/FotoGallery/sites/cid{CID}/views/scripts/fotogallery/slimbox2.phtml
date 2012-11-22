@@ -1,0 +1,93 @@
+<?php
+/**
+ * Slimbox renderer.
+ *
+ * Copyright (C) Kevin Papst
+ *
+ * @version $Id$
+ * @author Kevin Papst
+ */
+
+$config = $this->config;
+$images = $this->images;
+
+$thumbOptions = array();
+if (!empty($config['thumb_height_px']) && is_numeric($config['thumb_height_px']) && $config['thumb_height_px'] > 0) {
+    $thumbOptions['height'] = $config['thumb_height_px'];
+}
+
+if (!empty($config['thumb_width_px']) && is_numeric($config['thumb_width_px']) && $config['thumb_width_px'] > 0) {
+    $thumbOptions['width'] = $config['thumb_width_px'];
+}
+
+$fullOptions = array();
+if (!empty($config['full_height_px']) && is_numeric($config['full_height_px']) && $config['full_height_px'] > 0) {
+    $fullOptions['height'] = $config['full_height_px'];
+}
+
+if (!empty($config['full_width_px']) && is_numeric($config['full_width_px']) && $config['full_width_px'] > 0) {
+    $fullOptions['width'] = $config['full_width_px'];
+}
+
+$slimbox = $this->directory('public') . 'fotogallery/slimbox/';
+
+$this->headLink()->appendStylesheet($slimbox.'css/slimbox2.css');
+$this->headScript()->appendFile($slimbox.'js/slimbox2.js');
+
+?>
+<dl>
+<?php
+
+foreach ($images AS $image) {
+    $imgLink  = $this->link($image);
+    if (count($fullOptions) > 0) {
+        $imgLink  = $this->thumbnail($image, $fullOptions);
+    }
+    $thumbUrl = $this->thumbnail($image, $thumbOptions);
+
+    if ($config['show_name']) {
+        echo '<dt class="gallery-title">' .
+              '<a href="' . $imgLink . '" rel="lightbox-gal" class="thumnailLink" title="' .
+                $image->getName() .'">' .$image->getName() . '</a>' .
+             '</dt>';
+    }
+
+    ?>
+    <dt class="gallery-image">
+        <a class="imgLink" href="<?php echo $imgLink; ?>" rel="lightbox-imggal"
+            title="<?php
+                if (!$config['show_description']) {
+                    echo $image->getDescription();
+                } else {
+                    echo $image->getName();
+                }
+            ?>">
+            <img src="<?php echo $thumbUrl; ?>"
+                alt="<?php echo $image->getName(); ?>"
+                title="<?php echo $image->getName(); ?>">
+        </a>
+    </dt>
+    <?php
+    if ($config['show_description']) {
+        echo '<dd class="gallery-caption">'.$image->getDescription().'</dd>';
+    }
+}
+?>
+</dl>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
+	if (!/android|iphone|ipod|series60|symbian|windows ce|blackberry/i.test(navigator.userAgent)) {
+	    jQuery(function($) {
+	        $("a[rel^='lightbox']").slimbox({
+	        	   counterText: "<?php echo $this->t('gallery_image_counter'); ?>"
+		        }, null, function(el) {
+	            return (this == el) || ((this.rel.length > 8) && (this.rel == el.rel));
+	        });
+	    });
+	}
+
+});
+</script>

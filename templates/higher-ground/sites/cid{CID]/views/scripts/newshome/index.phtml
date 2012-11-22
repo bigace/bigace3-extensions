@@ -1,0 +1,61 @@
+<?php
+/* 	@license http://opensource.org/licenses/gpl-license.php GNU Public License
+	@author Kevin Papst 
+	@copyright Copyright (C) Kevin Papst 
+	@version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */
+
+$this->t()->load('news');
+$this->headLink()->appendStylesheet($this->directory().'news/styles.css');
+
+?>
+<div id="newsListing">
+<?php 
+foreach($this->NEWS as $newsEntry)
+{ 
+    $newsPage = $newsEntry['item'];
+    $newsUrl = $this->link($newsPage);
+    $newsImage = $newsEntry['image'];
+    ?>
+    <div class="newsEntry">
+        <h2><a href="<?php echo $newsUrl; ?>" title="<?php echo $newsPage->getTitle(); ?>"><?php echo $newsPage->getTitle(); ?></a></h2>
+        <?php if(!is_null($newsImage)) { ?>
+        <a href="<?php echo $newsUrl; ?>" title="<?php echo $newsImage->getName(); ?>">
+	        <img src="<?php echo $this->thumbnail($newsImage, array('width' => '100')); ?>" class="newsImage" alt="<?php echo $newsImage->getName(); ?>" align="left">
+        </a>
+        <?php } ?>
+        <p class="post-info">
+	        
+	        Posted by <?php echo $this->userProfileLink($this->MENU->getCreateByID(), null, true);?> |
+	        </p>
+	        <?php /*
+	        // FIXME 3.0 make me work with BIGACE 3
+	        {news_category item=$newsPage suffix="," last=" | "}
+	        {user id=$newsPage->getCreateByID()} 	
+	        | <a href="<?php echo $newsUrl; ?>#comments"><?php echo $this->commentCounter($newsPage); ?> <?php echo $this->t('news_comments'); ?></a>
+            */ ?>
+            
+        
+        <p><?php echo $newsPage->getTeaser(); ?></p>
+      <!--  <p class="newsMore"><?php echo $this->t('news_read_more'); ?> <a href="<?php echo $newsUrl; ?>"><?php echo $newsPage->getTitle(); ?></a></p>
+        -->
+    <p class="post-footer">		
+			<a href="<?php echo $newsUrl; ?>" class="readmore"><?php echo $this->t('news_read_more'); ?> </a> |
+			<a href="index.html" class="comments">Comments (3)</a> |				
+			<span class="date"><?php echo $this->date($newsPage->getDate()); ?></span>	
+			</p>
+    </div>
+    <?php 
+} 
+?>
+	
+</div>
+
+
+
+				
+			
+			
+			
+			
+			
+			

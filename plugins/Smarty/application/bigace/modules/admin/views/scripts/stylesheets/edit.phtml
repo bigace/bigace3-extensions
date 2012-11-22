@@ -1,0 +1,53 @@
+<?php
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 160 2011-03-24 12:35:14Z kevin $ */
+
+if (isset($this->ERROR)) {
+    echo $this->message($this->ERROR, 'error');
+}
+
+if (isset($this->INFO)) {
+    echo $this->message($this->INFO, 'info');
+}
+
+echo $this->backlink($this->BACK_URL);
+
+?>
+
+<form action="<?php echo $this->SAVE_URL; ?>" method="post">
+<input type="hidden" name="name" value="<?php echo $this->STYLESHEET_ID; ?>">
+
+<table border="0" width="100%" cellspacing="5">
+<tr>
+    <td>
+        <label><?php echo $this->t('name'); ?>: <b><?php echo $this->STYLESHEET_NAME; ?></label>
+    </td>
+    <td align="right">
+        <label><?php echo $this->t('editorcss'); ?>: <?php echo $this->EDITOR_CHOOSER; ?></label>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+		<label>
+		  <?php echo $this->t('description'); ?>:
+		  <?php echo $this->formText('description', $this->STYLESHEET_DESCRIPTION); ?>
+		</label>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+		<textarea name="content" id="styleEdit" style="width:100%;height:300px"><?php
+		  echo $this->STYLESHEET_CONTENT;
+		?></textarea>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+		<?php echo $this->saveButton('saveStylesheet'); ?>
+    </td>
+</tr>
+</table>
+
+</form>

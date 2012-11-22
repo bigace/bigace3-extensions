@@ -1,0 +1,27 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+
+echo '<ul class="glossary">';
+
+$abbr = array();
+foreach($this->ENTRIES as $entry)
+    $abbr[strtolower($entry['abbreviation'])] = $entry;
+ksort($abbr);
+
+foreach($abbr as $entry)
+{
+        echo '
+        <li>
+            <span class="abbr">'.$entry['abbreviation'].'</span>
+            <span class="desc">'.$entry['description'].'</span>
+        </li>
+        ';
+}
+  
+echo '</ul>';
+    
+?>

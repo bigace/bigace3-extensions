@@ -1,0 +1,4 @@
+Version 1.2:
+    - added multiple recipients (comma separated)
+    - reformatted email content
+    - added newlines in contact form

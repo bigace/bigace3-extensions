@@ -1,0 +1,1 @@
+{if $MENU->getCatchwords() != null && $MENU->getCatchwords() != ''}{redirect url=$MENU->getCatchwords()}{else}No URL configured to redirect to. Please enter your URL into the "catchwords" field of this page in menu administration.{/if}

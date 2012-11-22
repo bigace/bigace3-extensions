@@ -1,0 +1,134 @@
+<?php
+/*  @license http://opensource.org/licenses/gpl-license.php GNU Public License
+    @author Kevin Papst
+    @copyright Copyright (C) Kevin Papst
+    @version $Id: index.phtml 133 2011-03-17 10:51:42Z kevin $ */
+
+// prevent that the formular and comments are displayed if the comment plugin is not activated
+if (!isset($this->COMMENTS)) {
+    return;
+}
+
+$this->t()->load("comments");
+$commentDir = $this->directory().'news/';
+
+if ($this->useCSS) {
+    $this->headLink()->appendStylesheet($commentDir.'comments.css');
+}
+
+echo '<div id="comments">';
+
+if (count($this->COMMENTS) > 0)
+{
+    if ($this->showTitle) {
+        echo '<h3>' . $this->t('comment.list.title') . '</h3>';
+    }
+
+    echo $this->commentPrefix;
+    echo '<ol class="commentlist">';
+
+    foreach ($this->COMMENTS as $comment)
+    {
+        echo '
+        <li class="comment" id="comment'.$comment->getId().'">';
+
+        // what is that?
+        if (!$comment->getActivated()) {
+            echo '<div class="commentHint">'.$this->t("comment.pending").'</div>';
+        }
+
+        // user image
+        if ($this->useGravatar) {
+            echo '<div class="gravatar">
+            <img src="' .
+                $this->gravatar(
+                    $comment->getEmail(),
+                    $commentDir.'default_gravatar.gif',
+                    'R',
+                    $this->gravatarSize
+                ) .
+                '" height="'.$this->gravatarSize.'" width="'.$this->gravatarSize.'"></div>';
+        }
+
+        echo '
+            <div class="comment_content">
+                <div class="clearfix">
+                    <cite class="author_name">';
+
+        if ($this->useHomepage && $comment->getHomepage() != '') {
+            echo '<a href="'.$comment->getHomepage().'" target="_blank"';
+            if ($this->relnofollow) {
+                echo ' rel="nofollow"';
+            }
+            echo '>'.$comment->getName(). '</a>';
+        } else {
+            echo $comment->getName();
+        }
+
+        echo '
+                    </cite>
+                    <div class="comment_metadata">';
+
+        echo $this->date($comment->getTimestamp())
+                  ->withTime()
+                  ->withFormat($this->t('comment.date'));
+
+        echo '
+                    </div>
+                </div>
+                <div class="comment_text">
+                ';
+        echo $this->commentFormat($comment->getComment())->setNofollow($this->relnofollow);
+        echo '
+                </div>
+            </div>
+        ';
+
+        echo '
+        </li>';
+    }
+
+    echo '</ol>';
+
+    echo $this->commentSuffix;
+}
+
+// FIXME 3.0 support preview
+/*
+if (isset($commentAdmin.mode) && $commentAdmin.mode == 'preview')
+{
+    echo '
+        <div class="comment">
+            <div class="commentHint">'.$this->t("comment.duplicate").'</div>
+            ...
+        </div>';
+
+}
+*/
+
+if (isset($this->COMMENT_FORM))
+{
+    $form = $this->COMMENT_FORM;
+
+    echo '<h3>' . $this->t('comment.formular.title') . '</h3>';
+
+    echo '<div id="commentform">';
+
+    if (isset($this->COMMENT_RESULT)) {
+        if($this->COMMENT_RESULT == Bigace_Comment_Admin::SPAM) {
+            echo '<div class="errors spam">'.$this->t("comment.eaten.spam").'</div>';
+        } else if($this->COMMENT_RESULT == Bigace_Comment_Admin::DUPLICATE) {
+            echo '<div class="errors duplicate">'.$this->t("comment.duplicate").'</div>';
+        } else if($this->COMMENT_RESULT == Bigace_Comment_Admin::AWAIT_MODERATION) {
+            echo '<div class="pending">'.$this->t("comment.pending").'</div>';
+        } else if($this->COMMENT_RESULT == Bigace_Comment_Admin::NOT_CREATED) {
+            echo '<div class="errors">Could not create comment: '.$this->COMMENT_RESULT.'</div>';
+        }
+
+    }
+
+    echo $form;
+    echo '</div>';
+}
+
+echo '</div>';

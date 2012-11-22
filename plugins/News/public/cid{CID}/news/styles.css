@@ -1,0 +1,16 @@
+/*
+     This CSS file is made for default rendering of the News listing.
+     It is best compatible with the Bigace v3 default template.
+*/
+
+#newsListing .newsEntry  {border:2px #f9f9f9 solid;padding:14px;margin-bottom:24px;-moz-border-radius:4px;-webkit-border-radius:4px;-khtml-border-radius:4px;border-radius:4px;}
+#newsListing .newsImage  {border:1px solid #ddd;margin:4px 5px 0px 0;}
+#newsListing .newsTeaser {font-weight:bold;font-style:italic;}
+#newsListing .newsMore   {font-weight:bold;font-style:italic;clear:left;}
+#newsListing .newsImage  {margin-bottom:8px;border:2px solid #ccc;}
+#newsListing .newsMeta   {margin:-5px 0 10px 0;}
+#newsListing .newsArchives ul {list-style-type: none; margin: 0px;}
+#newsListing .newsArchives li {float:left; padding-left:10px;}
+#newsListing .newsArchives li span {margin-left: 5px;}
+#newsListing .newsArchives li:after {padding-left:10px;content:"|";}
+#newsListing .newsArchives .newClearer {clear:left;height:1px;}

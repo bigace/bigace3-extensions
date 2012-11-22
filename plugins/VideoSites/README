@@ -1,0 +1,36 @@
+##############################################################
+# README for the VideoSites Addon
+# Version: $Id: README 306 2010-02-04 19:04:44Z bigace $
+##############################################################
+
+Installation
+=================
+To install the "Video-Sites" extension follow these simple steps:
+
+ 1. Upload the extension using the Administration
+ 2. Install the "Video-Sites - Player" extension
+ 3. Activate the "YouTube" Plugin to display videos from YouTube and/or "Vimeo" for Vimeo videos
+
+
+INTRODUCTION
+=================
+To add a YouTube video simply add [youtube]youtube-id[/youtube] to the pages content and replace
+"youtube-id" with the YouTube Video ID. 
+
+To add a Vimeo video add [vimeo]vimeo-id[/vimeo] to the pages content and replace
+"vimeo-id" with the Vimeo Video ID. 
+
+Please <a href="http://wiki.bigace.de/bigace:extensions:youtube" target="_blank">read the documentation</a> for more infos about using the Plugin.
+
+CONFIGURATION
+=================
+This extension brings the new configuration package "video" with the following settings:
+- player.class       the Video-Player css class
+- player.width       the Video-Player width
+- player.height      the Video-Player css class
+- player.title       the Video-Player title
+
+CHANGELOG
+=================
+Version 1.0:
+- initial release for Bigace 3

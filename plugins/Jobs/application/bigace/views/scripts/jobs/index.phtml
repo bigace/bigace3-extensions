@@ -1,0 +1,46 @@
+<?php 
+/* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+   @author Kevin Papst
+   @copyright Copyright (C) Kevin Papst
+   @version $Id: index.phtml 4 2010-07-17 14:20:17Z kevin $ */ 
+
+$this->t()->load('jobs');
+
+echo '<div id="jobs">';
+
+foreach($this->ENTRIES as $id => $entry)
+{
+    echo '<h2><a href="'.$entry['url'].'">'.$entry['title'].'</a></h2>';
+    
+    if(isset($entry['childs']) && count($entry['childs']) > 0)
+    {
+        foreach($entry['childs'] as $job)
+        {
+            echo '<div class="listing">
+                <h3><a href="'.$job['url'].'">'.$job['title'].'</a></h3>
+                <p>'.sprintf($this->t('details_and_apply'),$job['url']).'</p>
+                    ';
+            if(isset($job['job_doc']) || isset($job['person_doc']) || isset($job['additional_doc']))
+            {
+                echo '<div class="jobdocs">';
+                if(isset($job['job_doc']))
+                    echo '<a class="'.end(explode(".", $job['job_doc']->getUniqueName())).'" href="'.$this->link($job['job_doc']).'">'.$this->t('job_document').'</a> ';
+                if(isset($job['person_doc']))
+                    echo '<a class="'.end(explode(".", $job['person_doc']->getUniqueName())).'" href="'.$this->link($job['person_doc']).'">'.$this->t('person_document').'</a> ';
+                if(isset($job['additional_doc']))
+                    echo '<a class="'.end(explode(".", $job['additional_doc']->getUniqueName())).'" href="'.$this->link($job['additional_doc']).'">'.$this->t('additional_document').'</a>';
+                echo '</div>';
+            }
+            
+            echo '</div>';
+        }
+    }
+    else
+    {
+        echo '<p>'.sprintf($this->t('no_jobs_for_type'),$entry['title']).'</p>';
+    }
+}
+  
+echo '</div>';
+    
+?>

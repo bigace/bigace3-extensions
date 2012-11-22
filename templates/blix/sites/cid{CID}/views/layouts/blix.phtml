@@ -1,0 +1,183 @@
+<?php
+/**
+ * Bigace - a PHP and MySQL based Web CMS.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new GNU General Public License
+ * that is bundled with this package in the file LICENSE.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.bigace.de/license.html
+ *
+ * Bigace is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * @category   Bigace
+ * @copyright  Copyright (c) 2009-2010 Keleo (http://www.keleo.de)
+ * @license    http://www.bigace.de/license.html     GNU Public License
+ * @version    $Id: blix.phtml 59 2011-02-21 12:47:39Z kevin $
+ */
+
+/*
+Description: The legendary Blix design, for years the default design of BIGACE, finally available as Zend template.
+Options: css=editor.css
+$Id: blix.phtml 59 2011-02-21 12:47:39Z kevin $
+*/
+
+// our public path with css files and image ressources
+$blixBase = $this->LAYOUT;
+$menu     = $this->MENU;
+
+// load translation we need in the template
+$this->t()->load('blix');
+$this->t()->load('bigace');
+
+// load the toplevel item to create links and menus.
+// try to fetch it in the current pages language first.
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $menu->getLanguageID());
+if ($topLevel === null) {
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+}
+
+// load the pages widgets
+$blixPortlets = $this->widgets($menu);
+
+// load most important links that we will use within the template
+$allLinks = $this->tplLinks($menu, $this->USER);
+
+// the browsers favicon
+$favIcon       = $this->directory('public') . 'system/images/favicon.ico';
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $menu->getLanguageID(); ?>" lang="<?php echo $menu->getLanguageID(); ?>">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<?php
+// generate cached and compressed css files to speed things up
+echo $this->fileMerge('blix/')
+          ->setDirectories(BIGACE_DIR_PUBLIC_CID, $this->directory())
+          ->addFile('layout.css')
+          ->addFile('spring_flavour.css')
+          ->addFile('bigace_extension.css')
+          ->withUniqueId(Bigace_Core::VERSION)
+          ->asCss();
+?>
+<?php echo $this->headStyle(); ?>
+<?php echo $this->headLink(); ?>
+
+<link rel="shortcut icon" type="image/x-icon" href="<?php echo $favIcon; ?>" />
+<?php echo $this->headMeta(); ?>
+
+<?php
+echo $this->metatags($menu);
+?>
+<script type="text/javascript">
+    var xTerm1 = '<?php echo $this->t("empty_searchterm"); ?>';
+    function doQuickSearch()
+    {
+        if(document.getElementById('s').value.length == 0) {
+            alert(xTerm1);
+            return false;
+        }
+        return true;
+    }
+</script>
+<?php echo $this->headScript(); ?>
+
+<?php echo Bigace_Hooks::do_action('tpl_header', $menu); ?>
+</head>
+<body>
+    <div id="container">
+
+    <div id="header">
+        <h1><a href="<?php echo $this->link($topLevel); ?>"><?php echo htmlspecialchars($this->sitename()); ?></a></h1>
+        <div class="languages"><?php echo $this->languageChooser(array(), array('hideActive' => true)); ?></div>
+    </div>
+
+    <div id="navigation">
+        <form action="<?php echo $allLinks['search']; ?>" method="post" onSubmit="return doQuickSearch();">
+            <fieldset>
+                <input type="text" name="search" value="" id="s" />
+                <input type="hidden" name="language" value="<?php echo $menu->getLanguageID(); ?>" />
+                <input type="submit" value="<?php echo $this->t('search_button'); ?>" id="searchbutton" name="searchbutton" />
+            </fieldset>
+        </form>
+
+        <ul>
+            <?php
+                $homeInMenu = Bigace_Config::get("blix.design", "show.home.in.topmenu", true);
+                if ($homeInMenu) {
+                    echo '<li><a href="'.$this->link($topLevel).'"';
+                    if ($menu->getID() == $topLevel->getID()) {
+                        echo ' class="selected"';
+                    }
+                    echo '>'.$topLevel->getName().'</a></li>';
+                }
+
+                echo $this->menu(
+                    $topLevel,
+                    array('prefix' => '<li>', 'suffix' => '</li>', 'selected' => 'selected', 'select' => $menu)
+                );
+            ?>
+        </ul>
+    </div>
+
+<hr class="low" />
+
+<div id="content">
+  <div class="entry single">
+  <?php /*
+    <h2><a href="<?php echo $this->link($menu); ?>"><?php echo $menu->getName(); ?></a></h2>
+    */  ?>
+    <?php echo $this->content(); ?>
+    <p class="info">
+        <em class="date">
+            <?php
+                echo $this->t("written_at") . ' ';
+                echo date("d. M Y", $menu->getCreateDate()) . ' ';
+                echo $this->t("written_by") . ' ';
+                echo $this->userProfileLink($menu->getCreateByID(), null, true);
+            ?>
+        </em>
+    </p>
+
+    <?php echo Bigace_Hooks::do_action('tpl_footer', $menu); ?>
+
+  </div>
+</div>
+
+<hr class="low" />
+
+<div id="subcontent">
+<?php
+foreach ($blixPortlets as $myPortlet) {
+   echo '<h2><em>' . $myPortlet->getTitle() . '</em></h2>';
+   echo $myPortlet->getHtml();
+}
+?>
+</div>
+
+<hr class="low" />
+<div id="footer">
+    <p><strong>
+        &copy; Copyright <?php echo date('Y', time()); ?>
+        <?php echo Bigace_Config::get("community", "copyright.holder", "BIGACE CMS"); ?>.
+        All rights reserved.
+    </strong><br />
+    Powered by <?php echo $this->copyright(true); ?>.
+<?php
+    if ($this->USER->isAnonymous()) {
+        echo '<a rel="nofollow" target="_self" href="'.$allLinks['login'].'">'.$this->t("login").'</a>';
+    } else {
+        echo '<a target="_blank" href="' . $allLinks['admin'] . '">' . $this->t("admin") . '</a> |';
+        echo '<a target="_self" href="' . $allLinks['logout'] . '">' . $this->t("logout") . '</a>';
+    }
+?>
+</p>
+</div>
+
+</div>
+</body>
+</html>

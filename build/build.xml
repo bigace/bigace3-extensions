@@ -1,0 +1,322 @@
+<project name="BIGACE-Extensions" default="help" basedir="..">
+    <description>
+        Build File for extensions for the BIGACE Web CMS.
+        
+        See http://www.bigace.de/ for further informations.
+    
+        BIGACE - a PHP based Web CMS.
+        Copyright (C) 2009-2010 Keleo (www.keleo.de).
+        Distributed under the terms of the GNU General Public License.
+        
+        $Id: build.xml 490 2010-04-30 14:27:51Z bigace $
+    </description>
+
+    <property file="build/local.properties" />
+    <property file="build/build.properties" />
+                                                                                           
+    <!-- Setup environmental location properties, based on the supplied settings -->
+    <target name="init">
+        <property name="target.extensions.dir" location="${release.directory}/" />
+        <property name="sources.plugin" location="plugins" />
+        <property name="sources.template" location="templates" />
+    </target>
+	
+	<!-- Called by our CI server automatically -->
+	<target name="hudson" description="Hudson CI task">
+        <!-- Location of all related directories -->
+        <property name="workspace" location="${basedir}/.." />
+        <property name="buildDir" location="${workspace}/build" />
+        
+        <!-- Overwrite default values -->
+        <property name="target.extensions.dir" location="${buildDir}/" />
+		<antcall target="init" />
+
+		<!-- prepare build folder -->
+        <delete dir="${buildDir}" />
+        <mkdir dir="${buildDir}"/>
+		
+        <!-- and now build! -->
+        <antcall target="all" />
+	</target>
+
+    <!-- Requires 3 parameter: "name", "version" and "srcdir" -->
+    <target name="internal.extension.zip" if="name">
+        <mkdir dir="${target.extensions.dir}/"/>
+        <zip destfile="${target.extensions.dir}/${name}_${version}.zip">
+            <fileset dir="${srcdir}/${name}/" />
+        </zip>
+    </target>    
+    	
+    <!-- All releaseable extensions -->
+    <target name="all" 
+        description="Create all releaseable extensions"
+    	depends="plugins,templates" />
+	
+	<!-- Plugins, modules and extensions -->
+	<target name="plugins" depends="init" description="Create plugins">
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="SocialBookmarks"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="Glossary"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="Guestbook"/>
+            <param name="version" value="1.9"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="VideoSites"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="SubmenuPreview"/>
+            <param name="version" value="1.4"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="News"/>
+            <param name="version" value="2.1"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="Sitemap"/>
+            <param name="version" value="1.4"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="Jobs"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="SecureDownloads"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="ContactMail"/>
+            <param name="version" value="1.2"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.plugin}"/>
+            <param name="name" value="FileListing"/>
+            <param name="version" value="2.0"/>
+        </antcall>
+        <antcall target="plugin.fotogallery" />
+        <antcall target="plugin.smarty" />
+		<antcall target="plugin.highlighter" />
+	</target>
+	
+	<!-- Plugins, modules and extensions -->
+	<target name="templates" depends="init" description="Create templates">
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="azulmedia"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="blix"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="business"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="emplode"/>
+            <param name="version" value="1.1"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="envision"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="green"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="grunge-era"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="higher-ground"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="marketplace"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="portal"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="sandstone"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="simpleblog"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="techjunkie"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+        <antcall target="internal.extension.zip">
+            <param name="srcdir" value="${sources.template}"/>
+            <param name="name" value="vector-lover"/>
+            <param name="version" value="1.0"/>
+        </antcall>
+	</target>
+
+    <!-- #### Fotogallery #### -->
+    <target name="plugin.fotogallery" depends="init" description="Fotogallery extension">
+
+        <property name="name" value="FotoGallery" />
+        <property name="version" value="2.0" />
+        <property name="release.path" location="${target.extensions.dir}/${name}_${version}" />
+
+        <fileset id="sources.slimbox" dir="${3rdparty.basepath}${slimbox.path}">
+            <patternset refid="always.exclude.files" />
+        </fileset>
+    	
+        <fileset id="sources.jqzoom" dir="${3rdparty.basepath}${jqzoom.path}">
+            <patternset refid="always.exclude.files" />
+            <exclude name="**/demos/"/>
+            <exclude name="**/js/jquery-1.5.js"/>
+        </fileset>
+        
+        <mkdir dir="${release.path}"/>
+        <mkdir dir="${release.path}/public"/>
+        <mkdir dir="${release.path}/public/fotogallery"/>
+        <mkdir dir="${release.path}/public/fotogallery/slimbox"/>
+        <mkdir dir="${release.path}/public/fotogallery/jqzoom"/>
+        
+        <copy todir="${release.path}/public/fotogallery/slimbox/" overwrite="true">
+            <fileset refid="sources.slimbox"/>
+        </copy>
+        <copy todir="${release.path}/public/fotogallery/jqzoom/" overwrite="true">
+            <fileset refid="sources.jqzoom"/>
+        </copy>
+        <copy todir="${release.path}" overwrite="true">
+            <fileset dir="${sources.plugin}/${name}/" />
+        </copy>
+        
+        <zip destfile="${target.extensions.dir}/${name}_${version}.zip">
+            <fileset dir="${release.path}" />
+        </zip>
+        <delete dir="${release.path}" />
+    </target>	
+	
+    <!-- #### Smarty template engine #### -->
+    <target name="plugin.smarty" depends="init" description="Smarty extension">
+
+        <property name="name" value="Smarty" />
+        <property name="version" value="1.0" />
+        <property name="release.path" location="${target.extensions.dir}/${name}_${version}" />
+
+        <fileset id="sources.smarty" dir="${3rdparty.basepath}${smarty.path}">
+            <patternset refid="always.exclude.files" />
+            <exclude name="**/demo/"/>
+            <include name="**/libs/**"/>
+            <include name="README"/>
+            <include name="COPYING.lib"/>
+            <include name="SMARTY2_BC_NOTES"/>
+        </fileset>
+    	
+        <mkdir dir="${release.path}"/>
+        <mkdir dir="${release.path}/library/"/>
+        <mkdir dir="${release.path}/library/Smarty/"/>
+    	
+        <copy todir="${release.path}/library/Smarty/" overwrite="true">
+            <fileset refid="sources.smarty"/>
+        </copy>
+        <copy todir="${release.path}" overwrite="true">
+            <fileset dir="${sources.plugin}/${name}/" />
+        </copy>
+    	
+        <zip destfile="${target.extensions.dir}/${name}_${version}.zip">
+            <fileset dir="${release.path}" />
+        </zip>
+    	<delete dir="${release.path}" />
+    </target>
+	
+    <!-- #### Javascript code highlighter #### -->
+    <target name="plugin.highlighter" depends="init" description="Highlighter extension">
+    	
+        <fileset id="sources.highlighter" dir="${3rdparty.basepath}${highlighter.path}">
+            <patternset refid="always.exclude.files" />
+            <exclude name="**/tests/"/>
+        </fileset>
+    	
+        <property name="name" value="Highlighter"/>
+        <property name="version" value="1.0"/>
+        <property name="release.path" location="${target.extensions.dir}/${name}_${version}"/>
+        <mkdir dir="${release.path}"/>
+        <mkdir dir="${release.path}/public/"/>
+        <mkdir dir="${release.path}/public/highlighter/"/>
+        <copy todir="${release.path}/public/highlighter/" overwrite="true">
+            <fileset refid="sources.highlighter"/>
+        </copy>
+        <copy todir="${release.path}" overwrite="true">
+            <fileset dir="${sources.plugin}/${name}/" />
+        </copy>
+        <zip destfile="${target.extensions.dir}/${name}_${version}.zip">
+            <fileset dir="${release.path}" />
+        </zip>
+    	<delete dir="${release.path}" />
+    </target>
+	
+    <!-- 
+    #######################################################
+     These files will always be excluded from a copy task.
+    #######################################################
+    -->
+    <patternset id="always.exclude.files" description="Files always to be excluded from the Copy task.">
+        <exclude name=".buildpath"/>
+        <exclude name=".settings"/>
+        <exclude name=".project"/>
+        <exclude name=".svn"/>
+    </patternset>
+
+	<!--
+		#####################################################
+        ##   [START] HELP                                  ##
+		#####################################################
+	-->
+	<target name="help">
+		<echo taskname="INFO" level="info">
+BIGACE - a PHP based Web CMS.
+Copyright (C) 2009-2010 Keleo (www.keleo.de).
+Distributed under the terms of the GNU General Public License.
+			
+Common tasks:
+=============
+all        - all available extensions
+plugins    - all plugins 
+templates  - all templates
+			
+Create a local.properties file, to customize your environment.
+		</echo>
+	</target>
+	
+</project>

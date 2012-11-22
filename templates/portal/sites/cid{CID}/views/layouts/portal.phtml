@@ -1,0 +1,188 @@
+<?php
+/**
+ * Contents: headleft, headright
+ * Widgets: sidebar
+ */
+
+
+$hiddenMenuID = Bigace_Config::get("portal", "hidden.menu");
+$hiddenMenu = null;
+if ($hiddenMenuID !== null) {
+    $hiddenMenu = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, $hiddenMenuID, $this->MENU->getLanguageID());
+}
+
+$this->t()->load('bigace');
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $this->MENU->getLanguageID());
+if($topLevel === null)
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+$layout = $this->directory().'portal/';
+
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+<?php echo $this->headStyle(); ?>
+<?php echo $this->headLink(); ?>
+
+<?php echo $this->headMeta(); ?>
+
+<?php echo $this->metatags($this->MENU); ?>
+
+<?php echo $this->headScript(); ?>
+<meta name="author" content="Your Name / Original design: Andreas Viklund - http://andreasviklund.com/" />
+<link rel="stylesheet" type="text/css" href="<?php echo $layout; ?>variant.css" media="screen,projection" title="Variant Portal" />
+<title>Variant Portal v1.0</title>
+</head>
+
+<body>
+<div id="container">
+
+<div id="toplinks">
+
+<p>
+                                <?php
+// load most important links that we will use within the template
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+
+    if (isset($allLinks['login'])) {
+    // nicht angemeldet
+    echo '<a target="_blank" href="'.$allLinks['login'].'">Login</a>';
+    ?>
+
+
+
+            <?php
+        } else {
+            if (isset($allLinks['admin'])) {
+                echo '<a target="_blank" href="'.$allLinks['admin'].'">Administration</a> &middot; ';
+        }
+            if (isset($allLinks['editor'])) {
+                echo '<a target="_blank" href="'.$allLinks['editor'].'">Edit page content</a> &middot; ';
+        }
+            if (isset($allLinks['logout'])) {
+              echo '<a href="'.$allLinks['logout'].'">Logout</a>';
+     }
+    }
+
+    ?>
+
+</p>
+</div>
+
+<div id="logo">
+<h1><a href="<?php echo $this->link($this->topLevel);?>"><?php echo $this->sitename();?></a></h1>
+<p>&nbsp</p>
+
+</div>
+
+<h2 class="hide">Site menu:</h2>
+<ul id="navitab">
+<?php
+            echo '<li><a href="'.$this->link($topLevel).'"';
+            if($this->MENU->getID() ==
+                $topLevel->getID())
+                echo ' class="current"';
+            echo '>'.$topLevel->getName().'</a></li>';
+
+            echo $this->menu(
+                $topLevel,
+                array(
+                    'prefix' => '<li>',
+                    'suffix' => '</li>',
+                    'selected' => 'current',
+                    'select' => $this->MENU,
+
+                )
+            );
+
+        ?>
+</ul>
+
+<div id="desc">
+
+<div class="splitleft">
+<?php
+            echo $this->content('headleft');
+        ?>
+</div>
+
+<div class="splitright">
+<?php
+            echo $this->content('headright');
+        ?>
+</div>
+<hr />
+</div>
+
+<div id="main">
+<?php
+$breadcrumbs = $this->wayHome($this->MENU, true);
+$amount = count($breadcrumbs);
+
+if($amount > 0)
+{
+    ?>
+    <ul id="breadcrumbs">
+    <?php
+        $i = 0;
+        foreach ($breadcrumbs as $id => $item) {
+                echo '&raquo;<li';
+                if($i == 0) echo ' class="first"';
+                if($i == $amount-1) echo ' class="last"';
+                echo '><a href="'.$this->link($item).'">'.$item->getName().'</a></li> ';
+                $i++;
+        }
+    ?>
+    </ul>
+    <?php
+}
+?>
+
+<?php
+            echo $this->content();
+        ?>
+</div>
+
+<div id="sidebar">
+
+<h2><?php echo $this->t('search');?></h2>
+
+                        <form id="qsearch" action="<?php echo $allLinks['search']; ?>" method="post" >
+                        <p>
+
+                        <input class="tbox" type="text" name="search" value="" title="" size="25"/>
+                        <input type="hidden" name="language" value="<?php echo $this->MENU->getLanguageID(); ?>" />
+                        <input class="btn" value="<?php echo $this->t('search'); ?>" alt="<?php echo $this->t('search');?>" type="submit"/>
+                        </p>
+                        </form>
+
+<div class="splitleft">
+<?php
+              $widgets = $this->widgets($this->MENU);
+              foreach($widgets as $widget) {
+                echo '<h2>' . $widget->getTitle() . '</h2>';
+                echo $widget->getHtml();
+              }
+            ?>
+
+</div>
+
+<div class="splitright">
+
+
+
+</div>
+
+<hr />
+</div>
+
+<div id="footer">
+<p>&copy; Copyright <?php echo date('Y', time()); ?>
+        <a href="http://www.bigace.de">BIGACE CMS</a>  &middot;  Template design by <a href="http://andreasviklund.com/">Andreas Viklund</a></p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<?php
+/**
+ * Contents:
+ * Widgets: sidebar
+ */
+
+
+$hiddenMenuID = Bigace_Config::get("green", "hidden.menu");
+$hiddenMenu = null;
+if ($hiddenMenuID !== null) {
+    $hiddenMenu = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, $hiddenMenuID, $this->MENU->getLanguageID());
+}
+
+$this->t()->load('bigace');
+$topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL, $this->MENU->getLanguageID());
+if($topLevel === null)
+    $topLevel = Bigace_Item_Basic::get(_BIGACE_ITEM_MENU, _BIGACE_TOP_LEVEL);
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+$layout = $this->directory().'green/';
+
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+        <title>The Soft Green Design</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
+        <link rel="stylesheet" href="<?php echo $layout; ?>styles.css" />
+</head>
+
+<body>
+
+        <div class="conteneur">
+
+                <div class="menu">
+                        <ul class="menu-list">
+                                <?php
+            echo '<li><a href="'.$this->link($topLevel).'"';
+            if($this->MENU->getID() ==
+                $topLevel->getID())
+                echo ' class="current"';
+            echo '>'.$topLevel->getName().'</a></li>';
+
+            echo $this->menu(
+                $topLevel,
+                array(
+                    'prefix' => '<li>',
+                    'suffix' => '</li>',
+                    'selected' => 'current',
+                    'select' => $this->MENU,
+
+                )
+            );
+
+        ?>
+                        </ul>
+                        <form id="qsearch" action="<?php echo $allLinks['search']; ?>" method="post" >
+
+
+                        <input class="tbox" type="text" name="search" value="" title="" size="15"/>
+                        <input type="hidden" name="language" value="<?php echo $this->MENU->getLanguageID(); ?>" />
+                        <button class="button" type="submit" id="createButton" name="createButton"><?php echo $this->t('search'); ?></button>
+                        </form>
+                </div>
+
+                <div class="head">
+                        <span class="header-title"><?php echo $this->sitename();?></span><br />
+                        <span class="header-title-two"></span>
+                </div>
+
+                <div class="centre">
+                <?php
+$breadcrumbs = $this->wayHome($this->MENU, true);
+$amount = count($breadcrumbs);
+
+if($amount > 0)
+{
+    ?>
+    <ul id="breadcrumbs">
+    <?php
+        $i = 0;
+        foreach ($breadcrumbs as $id => $item) {
+                echo '&raquo;<li';
+                if($i == 0) echo ' class="first"';
+                if($i == $amount-1) echo ' class="last"';
+                echo '><a href="'.$this->link($item).'">'.$item->getName().'</a></li> ';
+                $i++;
+        }
+    ?>
+    </ul>
+    <?php
+}
+?>
+                       <?php
+            echo $this->content();
+        ?>
+                </div>
+
+                <div class="pied">
+                 &copy; Copyright <?php echo date('Y', time()); ?> <a href="http://www.bigace.de">BIGACE CMS</a> |
+                        Design by <a href="http://nicolas.freezee.org" target="_BLANK">Nicolas Fafchamps</a> |
+                <?php
+// load most important links that we will use within the template
+$allLinks = $this->tplLinks($this->MENU, $this->USER);
+
+    if (isset($allLinks['login'])) {
+    // nicht angemeldet
+    echo '<a target="_blank" href="'.$allLinks['login'].'">Login</a>';
+    ?>
+
+
+
+            <?php
+        } else {
+            if (isset($allLinks['admin'])) {
+                echo '<a target="_blank" href="'.$allLinks['admin'].'">Administration </a> |';
+        }
+            if (isset($allLinks['editor'])) {
+                echo '<a target="_blank" href="'.$allLinks['editor'].'">Edit </a> |';
+        }
+            if (isset($allLinks['logout'])) {
+              echo '<a href="'.$allLinks['logout'].'">Logout</a>';
+     }
+    }
+
+    ?>
+
+
+
+                </div>
+
+
+        </div>
+
+</body>
+</html>
