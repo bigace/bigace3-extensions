@@ -124,6 +124,7 @@ if (isset($_POST) && count($_POST) > 0) {
     } else {
 
         $values = $form->getValues();
+        $didMail = false;
 
         // Send email to every recipient
         foreach($recipient as $recipientEmail)
