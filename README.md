@@ -1,4 +1,4 @@
-bigace3-extensions
-==================
+Extensions for Bigace CMS v3
+============================
 
-Official Bigace v3 extensions
+This is the official repository for Bigace v3 extensions.
