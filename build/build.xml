@@ -192,7 +192,7 @@
     <target name="plugin.fotogallery" depends="init" description="Fotogallery extension">
 
         <property name="name" value="FotoGallery" />
-        <property name="version" value="2.0" />
+        <property name="version" value="2.1" />
         <property name="release.path" location="${target.extensions.dir}/${name}_${version}" />
 
         <fileset id="sources.slimbox" dir="${3rdparty.basepath}${slimbox.path}">
