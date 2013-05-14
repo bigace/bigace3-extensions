@@ -27,7 +27,7 @@ $properties = array(
     'fotogallery_thumb_width_px'    => null,
     'fotogallery_full_height_px'    => null,
     'fotogallery_full_width_px'     => null,
-    'fotogallery_sort_name'         => null,
+    'fotogallery_sort_by'           => null,
     'fotogallery_sort_reverse'      => null,
     'fotogallery_jquery'            => null,
     'fotogallery_renderer'          => null,
@@ -65,8 +65,22 @@ $request->setCategory($all['image_category']);
 if ($all['sort_reverse']) {
     $request->setOrder(Bigace_Item_Request::ORDER_DESC);
 }
-if ($all['sort_name']) {
-    $request->setOrderBy('name');
+if (!empty($all['sort_by'])) {
+    $orderBy = strtolower(trim($all['sort_by']));
+    switch($orderBy) {
+        case 'parentid':
+        case 'createdate':
+        case 'modifieddate':
+        case 'unique_name':
+        case 'valid_from':
+        case 'valid_to':
+        case 'name':
+        case 'description':
+        case 'catchwords':
+        case 'id':
+            $request->setOrderBy($orderBy);
+            break;
+    }
 }
 if ($all['language'] !== null && $all['language'] != '') {
     $request->setLanguageID($all['language']);
