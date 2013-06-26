@@ -1,5 +1,5 @@
 <?php
-// TODO allow configurable image ???
+// TODO allow configurable image
 /*
  * support those tags:
  *
@@ -60,18 +60,21 @@ foreach ($this->NEWS as $newsEntry) {
 	if ($newsEntry->getImageID() !== null) {
         $image = Bigace_Item_Basic::get(_BIGACE_ITEM_IMAGE, $newsEntry->getImageID());
 
-        $type = Bigace_Item_Type_Registry::get(_BIGACE_ITEM_IMAGE);
-        $cs   = $type->getContentService();
-        $cnt  = $cs->get($image, $cs->query());
-
+        // prevent failure if image was deleted or not found
         if ($image !== null) {
-		    $entry->setEnclosure(
-    		    array(
-        	       'uri'    => LinkHelper::itemUrl($image),
-        	       'length' => $cnt->getSize(),
-        	       'type'   => $image->getMimetype()
-    		    )
-		    );
+            $type = Bigace_Item_Type_Registry::get(_BIGACE_ITEM_IMAGE);
+            $cs   = $type->getContentService();
+            $cnt  = $cs->get($image, $cs->query());
+
+            if ($image !== null) {
+                $entry->setEnclosure(
+                    array(
+                       'uri'    => LinkHelper::itemUrl($image),
+                       'length' => $cnt->getSize(),
+                       'type'   => $image->getMimetype()
+                    )
+                );
+            }
         }
 	}
 	$feed->addEntry($entry);
