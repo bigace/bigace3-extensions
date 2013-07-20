@@ -100,6 +100,12 @@ class Bigace_Comment_Admin
         if ($cs->checkCommentDuplicate($item, $name, $comment))
             return self::DUPLICATE;
 
+        // find commenting IP - either from a default header or from a proxy header
+        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
+        if ($ip == '127.0.0.1' && isset($_SERVER['X-FORWARDED-FOR'])) {
+            $ip = $_SERVER['X-FORWARDED-FOR'];
+        }
+
         // insert entry
         $values = array(
                     'ITEMTYPE'      => $item->getItemtypeID(),
@@ -108,7 +114,7 @@ class Bigace_Comment_Admin
                     'NAME'          => $name,
                     'EMAIL'         => $email,
                     'HOMEPAGE'      => $homepage,
-                    'IP'            => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0'),
+                    'IP'            => $ip,
                     'COMMENT'       => $comment,
                     'TIMESTAMP'     => time(),
                     'ACTIVE'        => $activate,
