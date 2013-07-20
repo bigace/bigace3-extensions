@@ -4,6 +4,11 @@ Open todos
 - Comments RSS Feed
 
 #############################################################
+Version 2.1.1:
+--------------
+- fixed broken feed in case of a missing or deleted image
+- lookup ip behind proxy through forwarded-for header
+
 Version 2.1:
 ------------
 - configurable amount of items on News-Home

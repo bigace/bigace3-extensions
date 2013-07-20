@@ -82,7 +82,7 @@
         <antcall target="internal.extension.zip">
             <param name="srcdir" value="${sources.plugin}"/>
             <param name="name" value="News"/>
-            <param name="version" value="2.1"/>
+            <param name="version" value="2.1.1"/>
         </antcall>
         <antcall target="internal.extension.zip">
             <param name="srcdir" value="${sources.plugin}"/>
