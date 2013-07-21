@@ -55,7 +55,7 @@ class News_FeedController extends Bigace_Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->getResponse()->setHeader("Content-Type", 'application/rss+xml', true);
+        $this->getResponse()->setHeader("Content-Type", 'application/rss+xml; charset=UTF-8', true);
 
         $id   = Bigace_Config::get("news", "root.id");
         $lang = Bigace_Config::get("news", "default.language");
@@ -99,7 +99,7 @@ class News_FeedController extends Bigace_Zend_Controller_Action
      */
     public function commentsAction()
     {
-        $this->getResponse()->setHeader("Content-Type", 'application/rss+xml', true);
+        $this->getResponse()->setHeader("Content-Type", 'application/rss+xml; charset=UTF-8', true);
 
         $service = new Bigace_Comment_Service();
         $this->view->COMMENTS = $service->getLatestComments(null, 10);

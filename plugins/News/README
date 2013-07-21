@@ -4,8 +4,9 @@ Open todos
 - Comments RSS Feed
 
 #############################################################
-Version 2.1.1:
+Version 2.2:
 --------------
+- RSS Feeds in UTF-8
 - fixed broken feed in case of a missing or deleted image
 - lookup ip behind proxy through forwarded-for header
 
