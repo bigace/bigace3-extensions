@@ -140,8 +140,20 @@ class Bigace_Zend_View_Helper_CommentFormat extends Zend_View_Helper_Abstract
      */
     private function decodeEntities($string)
     {
-        $string = preg_replace('/&#([0-9]+);/e', 'chr("\\1")', $string);
-        $string = preg_replace('/&#[Xx]([0-9A-Fa-f]+);/e', 'chr(hexdec("\\1"))', $string);
+        $string = preg_replace_callback('/&#([0-9]+);/', function ($value) {
+            if (is_array($value)) {
+                return chr($value[1]);
+            }
+
+            return chr($value);
+        }, $string);
+
+        $string = preg_replace_callback('/&#[Xx]([0-9A-Fa-f]+);/', function ($value) {
+            if (is_array($value)) {
+                return chr(hexdec($value[1]));
+            }
+            return chr(hexdec($value));
+        }, $string);
 
         return $string;
     }
