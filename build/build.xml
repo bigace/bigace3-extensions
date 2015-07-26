@@ -1,16 +1,31 @@
 <project name="BIGACE-Extensions" default="help" basedir="..">
-    <description>
-        Build File for extensions for the BIGACE Web CMS.
-        
-        See http://www.bigace.de/ for further informations.
-    
-        BIGACE - a PHP based Web CMS.
-        Copyright (C) 2009-2010 Keleo (www.keleo.de).
-        Distributed under the terms of the GNU General Public License.
-        
-        $Id: build.xml 490 2010-04-30 14:27:51Z bigace $
-    </description>
 
+    <target name="help">
+        <echo>
+            BIGACE - a PHP based Web CMS.
+            See http://www.bigace.de/ for further informations.
+
+            This build file helps creating Bigace extensions.
+
+            Copyright (C) 2009-2012 Kevin Papst (www.kevinpapst.de).
+            Distributed under the terms of the GNU General Public License.
+
+            Executable tasks
+            ================
+            all        - all available extensions
+            plugins    - all plugins
+            templates  - all templates
+        </echo>
+    </target>
+
+    <!--
+        ##########################################################
+        # Load and prepare the environment                       #
+        #                                                        #
+        # You can overwrite properties from build.properties by  #
+        # adding them in the new file local.properties           #
+        ##########################################################
+    -->
     <property file="build/local.properties" />
     <property file="build/build.properties" />
                                                                                            
@@ -84,7 +99,8 @@
             <param name="name" value="News"/>
             <param name="version" value="2.2"/>
         </antcall>
-        <antcall target="internal.extension.zip">
+
+    <antcall target="internal.extension.zip">
             <param name="srcdir" value="${sources.plugin}"/>
             <param name="name" value="Sitemap"/>
             <param name="version" value="1.4"/>
@@ -295,30 +311,8 @@
         <exclude name=".buildpath"/>
         <exclude name=".settings"/>
         <exclude name=".project"/>
-        <exclude name=".svn"/>
         <exclude name=".gitignore"/>
         <exclude name=".idea"/>
     </patternset>
 
-	<!--
-		#####################################################
-        ##   [START] HELP                                  ##
-		#####################################################
-	-->
-	<target name="help">
-		<echo taskname="INFO" level="info">
-BIGACE - a PHP based Web CMS.
-Copyright (C) 2009-2010 Keleo (www.keleo.de).
-Distributed under the terms of the GNU General Public License.
-			
-Common tasks:
-=============
-all        - all available extensions
-plugins    - all plugins 
-templates  - all templates
-			
-Create a local.properties file, to customize your environment.
-		</echo>
-	</target>
-	
 </project>
